@@ -1,0 +1,26 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+!.env.development.example
+data/
+!/prototypes/dashboard/orthogonal/data/
+playwright-report/
+test-results/
+*.log
+build/
+release-manifest.json
+
+# macOS Finder metadata
+.DS_Store
+
+# Machine-local MCP connection
+.mcp.json
+.mcp.json.backup-*
+
+# Supabase CLI machine-local metadata
+supabase/.temp/
+# Local recordings and visual verification for the Orthogonal prototype.
+/output/orthogonal-reference/
+/output/orthogonal-verification/
