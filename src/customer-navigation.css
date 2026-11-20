@@ -1,0 +1,205 @@
+.observation-shell .obs-sidebar.customer-sidebar {
+  padding: 30px 14px 16px;
+  border-color: #e3e3e3;
+  background: var(--sidebar);
+}
+
+.observation-shell .customer-sidebar > .obs-brand,
+.mobile-sidebar-content.customer-sidebar > .obs-brand {
+  display: block;
+  height: 32px;
+  margin-bottom: 23px;
+  padding: 0 12px;
+}
+
+.customer-sidebar .obs-brand > img {
+  width: 136.25px;
+  height: 30px;
+}
+
+.customer-sidebar .customer-navigation {
+  display: grid;
+  gap: 5px;
+}
+
+.customer-sidebar .customer-navigation > a:not(:where(.customer-add-funds)) {
+  --surface-decoration: none;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.customer-sidebar
+  .customer-navigation
+  > a:hover:not(:where(.customer-add-funds, .selected)) {
+  background: var(--secondary);
+  color: var(--muted-foreground);
+}
+
+.customer-sidebar .customer-navigation > a.selected {
+  --surface-decoration: none;
+  background: #dfdfdf;
+  border: 0;
+  color: var(--foreground);
+  box-shadow: none;
+}
+
+.customer-sidebar .customer-navigation > a:not(:where(.selected)) svg {
+  color: inherit;
+}
+
+.customer-sidebar .customer-navigation > a.selected svg {
+  color: var(--foreground);
+}
+
+.customer-navigation-divider {
+  height: 1px;
+  margin: 4px 7px 5px;
+  background: #c7c7c7;
+}
+
+.customer-sidebar .customer-navigation > .customer-navigation-credits {
+  min-height: 39px;
+  padding-inline-end: 0;
+}
+
+.customer-navigation-balance {
+  min-width: 53px;
+  margin-left: auto;
+  padding: 4px 5px;
+  border-radius: 7px;
+  background: var(--muted);
+  font-size: 11px;
+  line-height: 15px;
+  text-align: center;
+}
+
+.customer-sidebar
+  .customer-navigation
+  > .customer-add-funds[data-slot="button"] {
+  margin-top: 5px;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 7px;
+  box-shadow: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16.5px;
+}
+
+.customer-sidebar .account-menu-trigger {
+  --surface-decoration: none;
+  min-height: 41px;
+  padding: 7px 11px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  box-shadow: none;
+  color: #000;
+  font-size: 13px;
+  line-height: 15px;
+}
+
+.customer-sidebar .account-menu-trigger:is(:hover, [data-state="open"]) {
+  background: var(--secondary);
+}
+
+.customer-sidebar .account-menu-avatar {
+  width: 27px;
+  height: 27px;
+  border: 0;
+  border-radius: 50%;
+  background: #d7d7d7;
+}
+
+.customer-sidebar .account-menu-identity strong {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.customer-sidebar .account-menu-chevron {
+  width: 17px;
+  height: 17px;
+  color: var(--muted-foreground);
+}
+
+.mobile-navigation.customer-mobile-navigation {
+  background: var(--sidebar);
+}
+
+.account-menu-popover.customer-account-menu {
+  border-color: var(--border);
+  background: var(--popover);
+  color: var(--foreground);
+  box-shadow: var(--shadow-lg);
+}
+
+.customer-account-menu :is(.account-menu-heading, .account-menu-signout) {
+  border-color: var(--border);
+}
+
+.customer-account-menu
+  :is(.account-menu-heading small, nav svg, .account-menu-signout svg) {
+  color: var(--muted-foreground);
+}
+
+.customer-account-menu :is(nav a, nav button, .account-menu-signout) {
+  color: var(--foreground);
+}
+
+.customer-account-menu :is(nav a, nav button, .account-menu-signout):hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
+
+.customer-account-help[data-slot="dialog-content"] {
+  border-color: var(--border);
+  background: var(--card);
+}
+
+.customer-account-help
+  :is([data-slot="dialog-description"], .account-help-topics span) {
+  color: var(--muted-foreground);
+}
+
+.customer-account-help .account-help-topics strong {
+  color: var(--foreground);
+}
+
+.customer-account-help .account-help-topics a {
+  border-color: var(--border);
+  background: var(--card);
+}
+
+.customer-account-help .account-help-topics a:hover {
+  border-color: var(--border-strong);
+  background: var(--muted);
+}
+
+.customer-mobile-brand {
+  display: block;
+}
+
+.customer-mobile-brand img {
+  display: block;
+}
+
+.customer-home-icon {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  width: 17px;
+  height: 17px;
+}
+
+.customer-home-icon > svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
