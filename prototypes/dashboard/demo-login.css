@@ -1,0 +1,90 @@
+.demo-login {
+  display: grid;
+  align-items: center;
+  min-height: 100svh;
+  padding: 24px 24px 68px clamp(24px, 5.45vw, 80px);
+  background: #fff;
+}
+
+.demo-login-stack {
+  display: flex;
+  width: min(100%, 392px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 25px;
+}
+
+.demo-login-mark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 7px;
+}
+
+.demo-login-intro {
+  display: grid;
+  gap: 8px;
+}
+
+.demo-login-intro h1 {
+  color: #000;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 40px;
+}
+
+.demo-login-intro p {
+  color: #525252;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.demo-login-actions {
+  display: grid;
+  width: 100%;
+  gap: 10px;
+}
+
+.demo-login .demo-login-action[data-slot="button"] {
+  height: 32px;
+  justify-content: space-between;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 3.5px;
+  box-shadow: none;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.demo-login-google[data-slot="button"][data-variant="default"] {
+  --button-fill: #171717;
+  --button-hover: #262626;
+}
+
+.demo-login .demo-login-email[data-slot="button"] {
+  background: #e5e5e5;
+  color: #262626;
+}
+
+.demo-login .demo-login-email[data-slot="button"]:hover {
+  background: #d9d9d9;
+}
+
+.demo-login-browse {
+  color: #525252;
+  font-size: 13px;
+  line-height: 19px;
+}
+
+.demo-login-browse:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 400px) {
+  .demo-login-intro h1 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
