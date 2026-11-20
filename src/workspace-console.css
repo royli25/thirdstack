@@ -1,0 +1,552 @@
+/* Customer, business, and administration share one quiet workspace language. */
+.workspace-console .obs-main {
+  max-width: none;
+  padding-top: 30px;
+}
+.workspace-console .page-heading {
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
+}
+.workspace-console .page-heading h1 {
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.55px;
+  line-height: 1.47;
+}
+.workspace-console .page-heading p {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.65;
+  max-width: 85ch;
+}
+.workspace-console .page-heading [data-slot="button"] {
+  height: 32px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.workspace-console .product-panel {
+  border-radius: 7px;
+  box-shadow: none;
+}
+.workspace-console .product-panel > [data-slot="card-header"] {
+  min-height: 51px;
+  padding: 14px 19px;
+}
+.workspace-console .product-panel [data-slot="card-title"] {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.15px;
+}
+.workspace-console .product-panel [data-slot="card-description"] {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.workspace-console .product-panel > [data-slot="card-content"] {
+  padding: 20px;
+}
+.workspace-console .obs-empty {
+  min-height: 250px;
+  justify-content: center;
+  padding: 28px 16px;
+}
+.workspace-console .obs-empty h2 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.15px;
+  margin: 16px 0 7px;
+}
+.workspace-console .obs-empty p {
+  max-width: 52ch;
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 0;
+}
+.workspace-console .obs-empty > [data-slot="button"],
+.workspace-console .obs-empty > .button-row {
+  margin-top: 18px;
+}
+.workspace-console .empty-symbol {
+  width: 42px;
+  height: 42px;
+  border-radius: 9px;
+  background: var(--muted);
+  box-shadow: inset 0 1px 0 var(--card);
+}
+.empty-symbol > svg {
+  width: 20px;
+  height: 20px;
+  color: var(--muted-foreground);
+}
+.workspace-console .quiet-note {
+  margin: 16px 0;
+  padding: 0 2px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.workspace-console .quiet-note p {
+  max-width: 112ch;
+}
+.workspace-console .summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  margin-bottom: var(--grid-gap);
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+}
+.workspace-console .summary-grid > div {
+  min-height: 131px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 18px 20px;
+  border-radius: 7px;
+}
+.workspace-console .summary-grid strong {
+  font-size: 28px;
+  font-weight: 500;
+  margin: 13px 0 7px;
+}
+.workspace-console .list-toolbar {
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.workspace-console
+  :is(.list-toolbar, .lab-controls)
+  [data-slot="select-trigger"],
+.workspace-console .search-input [data-slot="input"] {
+  min-height: 36px;
+  height: 36px;
+  border-color: var(--border);
+  background: var(--background);
+  box-shadow: none;
+  font-size: 12px;
+}
+.workspace-console .model-table-row {
+  padding-block: 17px;
+}
+.workspace-console .model-table-row > div span {
+  font-size: 11px;
+  line-height: 1.7;
+}
+.workspace-console .tool-grid {
+  gap: var(--grid-gap);
+}
+.workspace-console .tool-grid > .product-panel {
+  margin-bottom: 0;
+}
+.workspace-console .tool-grid + .product-panel {
+  margin-top: var(--grid-gap);
+}
+.workspace-console .tool-metrics {
+  font-size: 12px;
+}
+.workspace-console .tool-name {
+  border: 0;
+  padding: 8px 10px;
+  margin-top: 16px;
+}
+.workspace-console .customer-sidebar .account-menu-trigger {
+  min-height: 45px;
+}
+.workspace-console .customer-sidebar .account-menu-identity small {
+  display: none;
+}
+.workspace-console .customer-sidebar .account-menu-avatar svg {
+  height: 15px;
+  width: 15px;
+}
+.workspace-console .portal-form {
+  gap: 18px;
+}
+.workspace-console .portal-form label {
+  font-size: 12px;
+  color: var(--foreground);
+}
+.workspace-console .portal-form :is(input, textarea, select) {
+  min-height: 36px;
+  font-size: 13px;
+  background-color: var(--background);
+  border-color: var(--border-strong);
+}
+.workspace-console .portal-form > [data-slot="button"] {
+  height: 34px;
+  font-size: 12px;
+}
+.workspace-console .portal-form .portal-checkbox {
+  font-size: 12px;
+}
+.workspace-console .portal-form .portal-checkbox input {
+  min-height: 18px;
+}
+.workspace-console .portal-details {
+  font-size: 12px;
+  line-height: 1.8;
+  gap: 16px;
+}
+.workspace-console .portal-details a {
+  color: var(--brand-accent-text);
+}
+.workspace-console .portal-review-grid {
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.6fr);
+  align-items: start;
+}
+.workspace-console .portal-review-grid > .product-panel {
+  margin-bottom: 0;
+}
+.console-review-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.console-review-toolbar > p {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.workspace-console .console-review-filter {
+  max-width: 240px;
+  width: 100%;
+  margin: 0;
+  font-size: 12px;
+}
+.workspace-console .console-review-filter select {
+  min-height: 36px;
+  padding: 7px 32px 7px 11px;
+  border-color: var(--border);
+  background-color: var(--card);
+  font-size: 12px;
+}
+.workspace-console .portal-company-list {
+  gap: 8px;
+}
+.workspace-console .portal-company-list button {
+  padding: 13px;
+  font-size: 13px;
+  border-color: var(--border);
+}
+.workspace-console .portal-company-list button strong {
+  font-weight: 500;
+}
+.workspace-console .portal-company-list button span {
+  font-size: 11px;
+  line-height: 1.65;
+}
+.workspace-console .portal-company-list button[aria-pressed="true"] {
+  background: var(--muted);
+  border-color: var(--border-strong);
+}
+.workspace-console .portal-company-list .obs-empty {
+  min-height: 250px;
+  padding-inline: 0;
+}
+.workspace-console .portal-company-list .obs-empty p {
+  max-width: 30ch;
+}
+.workspace-console .account-actions:empty {
+  display: none;
+}
+.workspace-console .tool-access-grid {
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.6fr);
+  margin-top: 20px;
+}
+.workspace-console .tool-access-list button {
+  font-size: 13px;
+}
+.workspace-console .tool-access-list button strong {
+  font-weight: 500;
+}
+.workspace-console .tool-access-notice {
+  font-size: 12px;
+  border-radius: 7px;
+}
+.workspace-console .provider-page {
+  gap: var(--grid-gap);
+}
+.workspace-console .provider-page .page-heading {
+  margin-bottom: 4px;
+}
+.workspace-console .lab-setup-grid {
+  grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
+  align-items: start;
+}
+.workspace-console .lab-provider-options {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.workspace-console .lab-provider-option {
+  min-width: 0;
+  min-height: 72px;
+  padding: 12px;
+  gap: 9px;
+  background: var(--background);
+}
+.workspace-console .lab-provider-option strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.workspace-console .lab-provider-option small {
+  font-size: 10px;
+  line-height: 1.65;
+}
+.workspace-console .lab-provider-option > [data-slot="badge"] {
+  padding-inline: 6px;
+  font-size: 10px;
+}
+.workspace-console .lab-method-steps {
+  gap: 20px;
+}
+.workspace-console .lab-method-steps strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.workspace-console .lab-method-steps p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+.workspace-console .lab-methodology {
+  font-size: 12px;
+}
+.workspace-console .lab-empty {
+  padding: 30px 16px;
+}
+.workspace-console .lab-empty h3 {
+  font-size: 14px;
+  font-weight: 400;
+}
+.workspace-console .lab-empty p {
+  font-size: 12px;
+}
+.workspace-console .platform-provider-grid {
+  gap: 12px;
+}
+.workspace-console .platform-provider-grid fieldset {
+  padding: 14px;
+  border-radius: 7px;
+  gap: 12px;
+  background: var(--background);
+}
+.workspace-console .platform-provider-grid :is(label, p) {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.workspace-console .platform-provider-grid p {
+  margin: 0;
+  color: var(--muted-foreground);
+}
+.workspace-console .platform-provider-grid legend {
+  font-size: 13px;
+  font-weight: 500;
+}
+.workspace-console .platform-provider-grid label {
+  gap: 6px;
+}
+.workspace-console .platform-provider-grid [data-slot="input"] {
+  height: 34px;
+  min-width: 0;
+  font-size: 12px;
+  border-color: var(--border-strong);
+  background: var(--card);
+}
+.workspace-console .platform-fields label {
+  font-size: 12px;
+  gap: 6px;
+}
+.workspace-console .tool-settings-view {
+  max-width: none;
+}
+.workspace-console .tool-settings-view .page-heading {
+  margin-bottom: 4px;
+}
+.workspace-console .tool-settings-view > p {
+  margin: 0;
+}
+.workspace-console .platform-provider-grid fieldset > p {
+  overflow-wrap: anywhere;
+}
+.workspace-console .dispute-review {
+  max-width: none;
+}
+@media (min-width: 1200px) {
+  .workspace-console .platform-provider-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace-console .platform-provider-grid fieldset {
+    position: relative;
+    grid-template-columns:
+      minmax(130px, 0.9fr) repeat(2, minmax(140px, 1fr))
+      minmax(160px, 1.2fr);
+    align-items: center;
+    gap: 20px;
+    padding: 14px 18px;
+  }
+  .workspace-console .platform-provider-grid legend {
+    position: absolute;
+    top: 13px;
+    left: 12px;
+    max-width: 150px;
+  }
+  .workspace-console .platform-provider-grid .platform-enabled {
+    padding-top: 22px;
+  }
+  .workspace-console .platform-provider-grid fieldset > p + p {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 701px) {
+  .workspace-console .obs-topbar {
+    display: none;
+  }
+}
+@media (max-width: 1199px) {
+  .workspace-console .lab-setup-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace-console .platform-provider-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  .workspace-console .portal-review-grid,
+  .workspace-console .tool-access-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .workspace-console .obs-main {
+    padding-top: 22px;
+  }
+  .workspace-console .page-heading {
+    align-items: flex-start;
+  }
+  .workspace-console .platform-provider-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace-console .summary-grid > div {
+    padding: 16px;
+  }
+}
+@media (max-width: 700px) {
+  .workspace-console .obs-topbar {
+    min-height: 58px;
+    justify-content: space-between;
+  }
+  .workspace-console.portal-admin .obs-topbar > div,
+  .workspace-console.portal-settings .obs-topbar > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .workspace-console.role-portal .mobile-nav-button {
+    order: 2;
+  }
+  .workspace-console .lab-provider-options {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace-console .summary-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace-console .summary-grid > div {
+    min-height: 112px;
+  }
+  .workspace-console .summary-grid small {
+    display: block;
+  }
+  .workspace-console .summary-grid strong {
+    font-size: 27px;
+  }
+  .workspace-console .console-review-toolbar {
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .workspace-console .console-review-toolbar > p {
+    margin: 0;
+  }
+  .workspace-console .console-review-filter {
+    max-width: none;
+  }
+  .workspace-console .portal-form :is(input, textarea, select) {
+    font-size: 16px;
+  }
+}
+
+/* Keep the keyboard shortcut hidden accessibly until it receives focus. */
+.observation-shell .skip-link:not(:focus) {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.observation-shell .skip-link:focus {
+  left: 16px;
+  background: var(--foreground);
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 3px;
+}
+.workspace-console .tool-workspace {
+  max-width: none;
+}
+.workspace-console .tool-workspace .ws-page-heading {
+  margin-bottom: 24px;
+}
+.workspace-console .ws-panel {
+  border-radius: 7px;
+  margin-bottom: var(--grid-gap);
+}
+.workspace-console .ws-panel > header {
+  min-height: 51px;
+  padding: 14px 19px;
+}
+.workspace-console .ws-panel > header h2 {
+  font-size: 14px;
+  font-weight: 500;
+}
+.workspace-console .ws-panel > header p {
+  font-size: 12px;
+  line-height: 1.65;
+}
+.workspace-console .ws-funding-notice {
+  padding: 13px 16px;
+  margin-bottom: 20px;
+}
+.workspace-console .ws-funding-notice > svg {
+  flex: none;
+}
+.workspace-console .ws-dispute-controls [data-slot="input"],
+.workspace-console .ws-dispute-controls select {
+  height: 36px;
+  border-color: var(--border);
+  background: var(--card);
+  font-size: 12px;
+}
+.workspace-console .ws-dispute-controls [data-slot="button"] {
+  height: 36px;
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .workspace-console .page-heading {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .workspace-console .page-heading > [data-slot="button"],
+  .workspace-console .page-heading > [data-slot="badge"] {
+    align-self: flex-start;
+  }
+  .workspace-console .obs-empty {
+    min-height: 190px;
+    padding: 20px 8px;
+  }
+  .workspace-console .portal-company-list .obs-empty {
+    min-height: 190px;
+  }
+}

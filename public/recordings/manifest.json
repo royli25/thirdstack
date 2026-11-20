@@ -1,0 +1,12 @@
+[
+  {
+    "id": "firecrawl-success",
+    "title": "Historical live: successful keyless extraction",
+    "capturedAt": "2026-11-01T12:29:49.202Z"
+  },
+  {
+    "id": "firecrawl-missing-page",
+    "title": "Historical live: API 200 / page 404",
+    "capturedAt": "2026-11-01T12:36:55.379Z"
+  }
+]

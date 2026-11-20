@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "scope": "sanitized task summary",
+  "id": "ec55abce-b1b9-4acc-87f1-8a4e60468dfe",
+  "status": "ready",
+  "spentMicros": 0,
+  "chargeType": "estimate",
+  "events": [
+    {
+      "id": 1,
+      "callId": null,
+      "type": "intent_created",
+      "at": "2026-11-01T12:29:48.739Z"
+    },
+    {
+      "id": 2,
+      "callId": null,
+      "type": "evidence_added",
+      "at": "2026-11-01T12:29:48.753Z"
+    },
+    {
+      "id": 3,
+      "callId": "c4cb5862-56c1-4cdc-9418-6e9590886306",
+      "type": "route_selected",
+      "at": "2026-11-01T12:29:48.764Z",
+      "provider": "firecrawl",
+      "policyVersion": "deterministic-v1"
+    },
+    {
+      "id": 4,
+      "callId": "c4cb5862-56c1-4cdc-9418-6e9590886306",
+      "type": "budget_reserved",
+      "at": "2026-11-01T12:29:48.767Z",
+      "provider": "firecrawl",
+      "rateCardVersion": "configured-estimates-v1:f08eb87b061c",
+      "estimateMicros": 0,
+      "chargeType": "free-tier",
+      "authMode": "keyless"
+    },
+    {
+      "id": 5,
+      "callId": "c4cb5862-56c1-4cdc-9418-6e9590886306",
+      "type": "provider_request",
+      "at": "2026-11-01T12:29:48.767Z",
+      "provider": "firecrawl"
+    },
+    {
+      "id": 6,
+      "callId": "c4cb5862-56c1-4cdc-9418-6e9590886306",
+      "type": "provider_response",
+      "at": "2026-11-01T12:29:49.202Z",
+      "provider": "firecrawl",
+      "authMode": "keyless",
+      "httpStatus": 200,
+      "latencyMs": 432,
+      "resultCount": 1,
+      "success": true,
+      "usage": {
+        "credits": 1,
+        "source": "provider response; not a reconciled invoice"
+      }
+    },
+    {
+      "id": 7,
+      "callId": "c4cb5862-56c1-4cdc-9418-6e9590886306",
+      "type": "budget_settled",
+      "at": "2026-11-01T12:29:49.202Z",
+      "provider": "firecrawl",
+      "rateCardVersion": "configured-estimates-v1:f08eb87b061c",
+      "estimateMicros": 0,
+      "chargeType": "free-tier",
+      "authMode": "keyless",
+      "billingStatus": "keyless-free-tier"
+    },
+    {
+      "id": 8,
+      "callId": "c4cb5862-56c1-4cdc-9418-6e9590886306",
+      "type": "extraction_received",
+      "at": "2026-11-01T12:29:49.204Z",
+      "taskCriteria": "unknown"
+    }
+  ]
+}
