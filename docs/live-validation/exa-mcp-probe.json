@@ -1,0 +1,18 @@
+{
+  "observedAt": "2026-11-01T12:29:48.773Z",
+  "provider": "exa",
+  "transport": "official public MCP",
+  "endpoint": "https://mcp.exa.ai/mcp",
+  "tool": "web_search_exa",
+  "httpStatus": 200,
+  "resultFormat": "text-only; not the REST normalized adapter schema",
+  "returnedSourceCount": 3,
+  "sourceUrls": [
+    "https://www.globenewswire.com/news-release/2025/10/27/3174837/0/en/kite-announces-investment-from-coinbase-ventures-to-advance-agentic-payments-with-the-x402-protocol.html",
+    "https://www.prnewswire.com/news-releases/circuit--chisel-secures-19-2-million-and-launches-atxp-a-web-wide-protocol-for-agentic-payments-302562331.html",
+    "https://www.businesswire.com/news/home/20251023151615/en/Fintech-Natural-Launches-With-%249.8M-Seed-Round-to-Power-Agentic-Payments"
+  ],
+  "restAcceptanceSatisfied": false,
+  "substantiveCriteria": "unknown",
+  "invoiceReconciled": false
+}

@@ -1,0 +1,65 @@
+{
+  "capturedAt": "2026-11-01T19:15:00.696Z",
+  "environment": "local production application with user-provisioned server-side keys",
+  "billingReconciled": false,
+  "analyticsConsent": false,
+  "tasks": {
+    "search": {
+      "taskId": "506483c0-f96e-4ab4-a814-2354ec3fb5a2",
+      "createdAt": "2026-11-01T18:57:47.816Z",
+      "updatedAt": "2026-11-01T18:58:05.591Z",
+      "estimatedUsd": 0.25,
+      "reservedMicros": 0,
+      "providers": {
+        "tavily": {
+          "attempts": 10,
+          "successes": 10,
+          "httpStatuses": [200],
+          "latencyMs": {
+            "min": 120,
+            "max": 1969,
+            "mean": 833
+          },
+          "returnedResults": 100,
+          "providerReportedUsd": null,
+          "reportedCredits": 10
+        },
+        "exa": {
+          "attempts": 10,
+          "successes": 10,
+          "httpStatuses": [200],
+          "latencyMs": {
+            "min": 61,
+            "max": 1933,
+            "mean": 932
+          },
+          "returnedResults": 100,
+          "providerReportedUsd": 0.07,
+          "reportedCredits": null
+        }
+      }
+    },
+    "extraction": {
+      "taskId": "85a5eaac-91c9-4a3e-b637-3880d12cc397",
+      "createdAt": "2026-11-01T19:00:20.894Z",
+      "updatedAt": "2026-11-01T19:00:26.848Z",
+      "estimatedUsd": 0.001,
+      "reservedMicros": 0,
+      "providers": {
+        "firecrawl": {
+          "attempts": 1,
+          "successes": 1,
+          "httpStatuses": [200],
+          "latencyMs": {
+            "min": 462,
+            "max": 462,
+            "mean": 462
+          },
+          "returnedResults": 1,
+          "providerReportedUsd": null,
+          "reportedCredits": 1
+        }
+      }
+    }
+  }
+}
