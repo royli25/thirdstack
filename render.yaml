@@ -1,0 +1,90 @@
+# Render blueprint for the hosted octolab server at https://twohands.tech.
+#
+# One always-on container built from the Dockerfile, using the hosted Supabase
+# project for PostgreSQL and Auth. Values marked `sync: false` are entered in
+# the Render dashboard and never stored in this repository.
+services:
+  - type: web
+    name: twohands
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    branch: main
+    # Deploys are started by hand: schema migrations are a separate operator
+    # step (`db:migrate:production`) after stopping the old runtime and before
+    # starting code that needs them. See docs/RELEASE_CHECKLIST.md.
+    autoDeployTrigger: "off"
+    plan: starter
+    # Same coast as the Supabase project (us-east-1).
+    region: virginia
+    # The server holds an exclusive database lock (see claimRuntime), so a
+    # second copy refuses to start. Keep this at one instance.
+    numInstances: 1
+    healthCheckPath: /healthz
+    # The disk stores nothing in PostgreSQL mode. It is here because a service
+    # with a disk is stopped before its replacement starts; without it Render
+    # starts the new instance first and it fails on the database lock.
+    disk:
+      name: runtime-lock
+      mountPath: /var/octolab
+      sizeGB: 1
+    domains:
+      - twohands.tech
+      - www.twohands.tech
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: STORAGE_BACKEND
+        value: postgres
+      - key: PUBLIC_APP_URL
+        value: https://twohands.tech
+      # Supabase's public root CA, added as a secret file named supabase-ca.crt.
+      - key: NODE_EXTRA_CA_CERTS
+        value: /etc/secrets/supabase-ca.crt
+      # Stripe sandbox deposits are on (test keys only; live keys are refused).
+      # On-chain test deposits stay off until they are deliberately enabled.
+      - key: STRIPE_TEST_ENABLED
+        value: "true"
+      - key: DEPOSITS_TESTNET_ENABLED
+        value: "false"
+      # Prepaid wallet enforcement (sandbox credits). Only accounts with a
+      # verified rate in octolab.wallet_rates are held and charged; see
+      # docs/WALLET_ENFORCEMENT.md.
+      - key: TWO_HANDS_WALLET_ENFORCEMENT
+        value: "true"
+      # Account label bound into each wallet rate. Not a secret. Changing it
+      # makes enrolled accounts fail closed until their rate is re-verified.
+      - key: TAVILY_ACCOUNT_REFERENCE
+        value: tavily-primary
+      # Real-money top-ups stay off until the live Stripe key and webhook
+      # secret are entered in the dashboard and the rollout in
+      # docs/STRIPE_LIVE.md is complete. Refunds of unused credits stay off
+      # until a refund policy is approved.
+      - key: STRIPE_LIVE_ENABLED
+        value: "false"
+      - key: TWO_HANDS_UNUSED_REFUNDS
+        value: "false"
+      - key: STRIPE_LIVE_SECRET_KEY
+        sync: false
+      - key: STRIPE_LIVE_WEBHOOK_SECRET
+        sync: false
+      # Session pooler connection string on port 5432.
+      - key: DATABASE_URL
+        sync: false
+      - key: LEGACY_WORKSPACE_ID
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_ADMIN_USER_IDS
+        sync: false
+      # Provider keys. A missing key leaves that tool unavailable.
+      - key: EXA_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: FIRECRAWL_API_KEY
+        sync: false
+      - key: JINA_API_KEY
+        sync: false

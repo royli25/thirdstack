@@ -1,0 +1,21 @@
+node_modules
+dist
+build
+.git
+.env
+.env.*
+data
+test-results
+playwright-report
+
+# Local observation records and machine-specific connections
+.gstack
+.mcp.json*
+*.log
+research
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.enc
+*.dump
+release-manifest.json
