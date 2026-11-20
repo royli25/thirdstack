@@ -1,0 +1,150 @@
+# Merchant-side data flow when a buyer pays through ChatGPT / OpenAI (as of Nov 2026)
+
+> Method note: In this session WebFetch could not resolve developers.openai.com or docs.stripe.com, and GitHub API access to the agentic-commerce-protocol repo was not enabled. Every finding below therefore comes from WebSearch result summaries/snippets, not full-page reads. Field names are quoted only where a snippet surfaced them. Where I rely on my own recollection of the launch-era (Sept 2025) spec, it is flagged in Inferences/Gaps, not in Cited Findings.
+
+**Timeline context (needed to read everything else):**
+- Sept 29, 2025: ACP + Instant Checkout launched (OpenAI + Stripe). Launch-era.
+- Jan 30, 2026: ACP version `2026-01-30` (extensions, discounts, payment handlers, per secondary sources). Now deprecated.
+- Mar 24, 2026: OpenAI scaled back standalone Instant Checkout; ChatGPT shifts to discovery + merchant-run checkout/apps. ACP itself survives as infrastructure.
+- Apr 17, 2026: ACP version `2026-04-17` (current at time of searches): carts, native orders, delegated 3DS2 authentication, discovery doc.
+- Nov 13, 2026: ChatGPT Wallet launched (US Pro users, "dots" agents, tokenized Visa/Mastercard/Amex cards, no crypto/stablecoin balance).
+
+---
+
+## 1. ACP checkout/order payload and the Delegated Payment Spec: what the merchant and its PSP receive
+
+### Takeaway
+Under ACP the merchant receives ordinary order PII directly: a `buyer` object (`first_name`, `last_name`, `email`, optional `phone_number`) and a `fulfillment_address` for physical goods, plus a billing address with the payment data. The card itself never goes to the merchant. OpenAI sends it to the merchant's PSP (or a PCI DSS Level 1 merchant's own vault) under the Delegated Payment Spec. The PSP returns a single-use token scoped by an `allowance` (merchant, checkout session, max amount, expiry), and the merchant charges that token through its existing PSP. OpenAI is not merchant of record.
+
+### Cited Findings
+- **Buyer object fields:** ACP checkout examples use `first_name`, `last_name`, `email` and an optional `phone_number` in the `buyer` block. — [agenticcommerce.dev Checkout reference](https://www.agenticcommerce.dev/docs/reference/checkout) (via search snippet); also [rajnandan Medium ACP intro](https://rajnandan.medium.com/agentic-commerce-protocol-acp-cbb2fddc271c), [cefboud.com ACP exploration](https://cefboud.com/posts/agent-commerce-protocol-acp-openai-stripe/)
+- One analysis says ACP requires first and last name as separate required fields; UCP is contrasted. — [ecorpit.com ACP vs UCP 2026](https://ecorpit.com/acp-vs-ucp-agentic-checkout-dual-protocol-merchants-2026/)
+- **Fulfillment address:** `fulfillment_address` carries name, line one, optional line two, city, state, country and postal code, and is required for physical goods. — [agenticcommerce.dev Checkout reference](https://www.agenticcommerce.dev/docs/reference/checkout)
+- Phone format is not pinned down in ACP examples (e.g. `+14155551234` vs `15552003434`). UCP specifies E.164. — [ucp.dev checkout spec 2026-08-25](https://ucp.dev/2026-08-25/specification/shopping/checkout/)
+- Third-party merchant guides summarize that ACP merchants receive "name, email, shipping, item" data. The "search intent" and conversation data stay with OpenAI, so the seller "only receive[s] final order details." — [Consentmo blog](https://www.consentmo.com/blog-posts/chatgpt-checkout-agentic-commerce-what-shopify-merchants-need-to-know-and-whats-still-unclear); [feedrobin guide](https://www.feedrobin.com/guides/chatgpt-instant-checkout-agentic-commerce-protocol) (secondary, unverified against OpenAI terms)
+- **Delegated Payment Spec, who may use it:** OpenAI's spec says direct integration is only for PSPs or PCI DSS Level 1 merchants using their own vaults. Everyone else uses Stripe's Shared Payment Token, "the first Delegated Payment Spec-compatible implementation." — [OpenAI Delegated Payment Spec](https://developers.openai.com/commerce/specs/payment) (snippet)
+- The delegated credential is single-use, set with allowances, and "cannot be used outside the defined limits of the user-approved purchase." — [OpenAI Delegated Payment Spec](https://developers.openai.com/commerce/specs/payment) (snippet)
+- **Allowance scoping (Adyen implementation):** the token is bound to one merchant account (`allowance.merchant_id`) and one checkout session (`allowance.checkout_session_id`), cannot exceed `allowance.max_amount`, and expires at an ISO 8601 `expires_at`. — [Adyen delegated payment spec](https://docs.adyen.com/online-payments/agentic-commerce/delegated-payment-spec)
+- **Payment-method display fields:** Adyen documents `payment_method.display_brand` (card brand for display) and `payment_method.display_last4` ("original last 4 digits of the card for customer display when the card is not a PAN"). Worldpay lists `display_card_funding_type` as required and limits `display_last4` to 4 characters. — [Adyen](https://docs.adyen.com/online-payments/agentic-commerce/delegated-payment-spec); [Worldpay delegate-payment OpenAPI](https://developer.worldpay.com/products/sessions/openapi/delegate-payment)
+- **Risk signals:** `risk_signals.type`, `risk_signals.score`, `risk_signals.action` (values: `blocked`, `manual_review`, `authorized`). — [Adyen](https://docs.adyen.com/online-payments/agentic-commerce/delegated-payment-spec); [Worldpay](https://developer.worldpay.com/products/sessions/openapi/delegate-payment)
+- Checkout.com's ACP beta requires `payment_method`, `allowance`, `risk_signals` and `metadata`; `billing_address` is optional there. — [Checkout.com ACP API reference](https://api-reference.checkout.com/tag/Agentic-Commerce-Protocol)
+- OpenAI is not merchant of record. Merchants bring their own PSP and process payments as they would any digital payment. — [OpenAI Delegated Payment Spec / key concepts](https://developers.openai.com/commerce/guides/key-concepts) (snippet)
+- PayPal/Braintree's ACP implementation is likewise a single-use token bound to the merchant ID, with configurable amount/time restrictions, processed through the merchant's existing Braintree integration. — [PayPal ACP integration docs](https://developer.paypal.com/agent-ready/agentic-commerce-protocol)
+- **Spec changes:** The `2026-04-17` changelog promotes changes accumulated since `2026-01-30` (now deprecated). It adds Delegate Authentication, where agents can run 3DS2 browser-based challenges with merchant-specified providers and "include the buyer's consent decisions for each option surfaced", plus a `denied` outcome example (consumer authentication SEP, PR #53). — [ACP changelog 2026-04-17 (GitHub)](https://github.com/agentic-commerce-protocol/agentic-commerce-protocol/blob/main/changelog/2026-04-17.md)
+- Secondary sources say `2026-04-17` also added carts, push feeds, native orders (with fulfillments, returns, chargebacks), an MCP binding and a `/.well-known/acp.json` discovery document, and that `2026-01-30` added extensions, discounts and payment handlers. — [swell.is ACP explainer](https://www.swell.is/content/agentic-commerce-protocol-explained); [shhots.ai ACP guide](https://shhots.ai/blog/agentic-commerce-protocol/) (unverified against primary)
+- Stripe's ACP docs point to a dated OpenAPI spec, `2026-04-17`, in the ACP GitHub repo as reference. — [Stripe ACP docs](https://docs.stripe.com/agentic-commerce/protocols/acp) (snippet)
+
+### Inferences
+- The merchant's view is split. The **checkout API** (merchant server) gets identity and contact PII plus cart. The **PSP** gets the raw credential (PAN or network token + cryptogram), billing address, risk signals and allowance. The merchant then sees only a token ID (`vt_...`-style in the launch spec, or an `spt_...` on Stripe) plus display metadata (brand, last4, funding type).
+- From my recollection of the launch-era (2025-09-29) spec, not re-verified here: the full delegate-payment `payment_method` object included `type: "card"`, `card_number_type` (`fpan` | `network_token`), `number`, `exp_month`, `exp_year`, `name`, `cvc`, `cryptogram`, `eci_value`, `checks_performed`, `iin`, `display_card_funding_type`, `display_wallet_type`, `display_brand`, `display_last4`. `allowance` included `reason: "one_time"`, `max_amount`, `currency`, `checkout_session_id`, `merchant_id`, `expires_at`. The checkout `complete` call carried `payment_data { token, provider, billing_address }`. If accurate, the `iin` (BIN) goes to the PSP, and a PSP may expose it to the merchant in its normal payment object.
+- Because the `2026-04-17` release delegates 3DS to agents and adds "native orders" with returns/chargebacks, a merchant on current ACP versions gets more lifecycle and authentication-result data than at launch, but no added buyer identity fields were reported.
+- After the March 2026 scale-back, most ChatGPT purchases complete on merchant-owned checkouts or apps. There the merchant gets whatever its own checkout collects (often the full customer account), so ACP's data minimization applies to fewer real transactions.
+
+### Gaps
+- Could not read the canonical `2026-04-17` OpenAPI/JSON schema to confirm which `buyer` fields are required vs optional in the current version, or whether new fields (e.g. buyer account linking or loyalty IDs) were added.
+- No primary confirmation of whether `billing_address` is always passed to the merchant, as opposed to only the PSP.
+
+---
+
+## 2. Stripe Shared Payment Tokens (SPT): scope, what the merchant sees, repeat-buyer linkability
+
+### Takeaway
+An SPT is a limited-use reference to a payment method stored in the *agent's* (OpenAI's) Stripe account. It is scoped by `usage_limits` (`currency`, `max_amount`, `expires_at`) and to a specific seller via `seller_details`, and it never reveals the PAN. When the seller retrieves the granted token, it sees card summary data, including `last4`, `fingerprint`, expiry, funding, networks and billing details. Confirming a PaymentIntent clones the buyer's payment method into a new PaymentMethod on the seller's account. The `fingerprint` gives the seller a stable per-card identifier for repeat-buyer linking. There is no OpenAI-side customer ID.
+
+### Cited Findings
+- An SPT is "a limited reference to a payment method that's stored in the agent's Stripe account". It has usage limits and expiration windows and never reveals PANs or other raw credentials. — [Stripe docs: Shared payment tokens](https://docs.stripe.com/agentic-commerce/concepts/shared-payment-tokens) (snippet)
+- `usage_limits` fields: `currency`, `max_amount` (max capturable) and `expires_at` (after which the token can't confirm a PaymentIntent). The agent normally sets `max_amount` to the transaction total. — [Stripe SPT docs](https://docs.stripe.com/agentic-commerce/concepts/shared-payment-tokens?agent-seller=agent); [stripe-java GrantedToken.UsageLimits](https://stripe.dev/stripe-java/com/stripe/model/sharedpayment/GrantedToken.UsageLimits.html)
+- `seller_details` scopes the token to a seller. On the issued token, `external_id` identifies the logical seller (usually merchant ID) and `network_business_profile` identifies the network. Test/helper examples instead use `seller_details[network_id]`, a naming discrepancy across API versions. — [Stripe Issued Token object](https://docs.stripe.com/api/shared-payment/issued-token/object); [Stripe testing](https://docs.stripe.com/agentic-commerce/testing)
+- Stripe split the objects into `SharedPaymentIssuedToken` (agent side) and `SharedPaymentGrantedToken` (seller side), with changelog entries in the `2026-04-22` ("dahlia") API version. — [Stripe changelog: shared payment granted token](https://docs.stripe.com/changelog/dahlia/2026-04-22/shared-payment-granted-token); [issued token](https://docs.stripe.com/changelog/dahlia/2026-04-22/shared-payment-issued-token)
+- **What the seller sees:** The SharedPaymentGrantedToken retrieve example has a nested payment-method block, "Details of the PaymentMethod that was shared via this token". It includes card fields such as `last4` (`"4242"`), `fingerprint` (`"dyRcYjZNxnHpC51l"`), expiry, funding and networks. The object also has `billing_details` with address fields and a card object with `display_brand`. `payment_method_details` is marked nullable. — [Stripe Retrieve SharedPaymentGrantedToken](https://docs.stripe.com/api/shared-payment/granted-token/retrieve); [Granted Token object](https://docs.stripe.com/api/shared-payment/granted-token/object)
+- Confirming a PaymentIntent with an SPT makes Stripe set `payment_method` to "a new PaymentMethod cloned from the customer's original method." — [Stripe Granted Token docs](https://docs.stripe.com/api/shared-payment/granted-token/object) (snippet)
+- For Apple Pay/Google Pay-backed cards, Stripe computes `fingerprint` from the DPAN, not the real card number. — [Stripe support: dynamic_last4](https://support.stripe.com/questions/how-do-card-numbers-work-with-apple-pay-and-google-pay-and-what-is-dynamic-last4)
+- Sellers can subscribe to `shared_payment.granted_token.used` webhooks. — [Stripe SPT docs](https://docs.stripe.com/agentic-commerce/concepts/shared-payment-tokens)
+- SPTs were expanded to carry Visa and Mastercard agentic/network tokens, and Affirm and Klarna BNPL. — [Digital Transactions](https://www.digitaltransactions.net/stripe-will-support-visa-and-mastercard-agentic-tokens-and-back-bnpl-for-klarna-and-affirm/); [American Banker](https://www.americanbanker.com/payments/news/stripe-advances-security-for-agentic-commerce)
+- Stripe's Link agent wallet can give agents a one-time virtual card or an SPT scoped to a merchant and amount. Stablecoin support for Link agent wallet and SPTs was described as "coming soon." — [agenticplug.ai on Link wallet](https://agenticplug.ai/blog/what-is-stripe-link-wallet-for-ai-agents); [eco.com Link Agents & x402](https://eco.com/support/en/articles/14839406-stripe-link-agents-and-x402-explained) (secondary)
+
+### Inferences
+- The scope is merchant + amount + currency + time. Under ACP the allowance also binds it to one `checkout_session_id`. It is single-use in practice.
+- **Repeat-buyer linking is possible within the merchant's own Stripe data.** `fingerprint` is stable for the same card number, so the same buyer using the same FPAN-backed card across purchases produces the same fingerprint, and the merchant also gets the buyer's email/name/address via the ACP `buyer` object. A wallet/DPAN- or network-token-backed credential may produce a different fingerprint (computed on DPAN/token), which weakens card-based linking. Email from the `buyer` object remains the strongest join key.
+- The seller does not get an OpenAI user ID or a reusable Stripe `Customer`. The cloned PaymentMethod is seller-side and is not attached to a customer for future off-session reuse; the SPT's limits prevent reuse.
+- Whether full BIN/IIN or issuer country is exposed on the granted token's card block was not confirmed. Standard Stripe card objects expose `brand`, `country`, `funding`, `last4`, `exp_*`, `fingerprint`, but not the full BIN by default.
+
+### Gaps
+- Could not read the full granted-token schema to confirm presence of `iin`, `country`, `wallet`, or `risk_details` subfields in the `2026-04-22` API version.
+- No source confirmed Stripe's current fingerprint scope (per-account vs platform-wide) for cloned SPT PaymentMethods.
+
+---
+
+## 3. Stored balance / stablecoin via an OpenAI wallet: fiat or crypto to merchant? On-chain data visible?
+
+### Takeaway
+As of November 2026, OpenAI's wallet (ChatGPT Wallet, launched Nov 13, 2026) holds no stored balance and no crypto or stablecoins. It pays with network-tokenized Visa/Mastercard/Amex cards, so merchants receive ordinary card payments settled in fiat and never see a blockchain address or tx hash. Stablecoin acceptance exists elsewhere in the stack (Stripe MPP on Tempo/Solana, x402). On Stripe, those payments settle into the merchant's normal fiat Stripe balance. Under raw x402, the merchant/facilitator does see the payer's on-chain address and tx hash.
+
+### Cited Findings
+- ChatGPT Wallet launched Nov 13, 2026 for US ChatGPT Pro users. Purchases run through OpenAI's "dots" agents using Amex, Mastercard and Visa cards. — [TechCrunch](https://techcrunch.com/2026/11/13/chatgpts-new-wallet-lets-ai-agents-shop-and-check-out-for-you/); [Decrypt](https://decrypt.co/383278/openai-chatgpt-wallet-ai-agents-shop-without-crypto)
+- Decrypt reports the wallet does not hold crypto or a cash balance. Stablecoin Insider says you cannot pay with crypto or stablecoins. CoinCentral notes OpenAI did not say whether stablecoins will be supported later. — [Decrypt](https://decrypt.co/383278/openai-chatgpt-wallet-ai-agents-shop-without-crypto); [Stablecoin Insider](https://stablecoininsider.org/chatgpt-wallet/); [CoinCentral](https://coincentral.com/openai-adds-a-card-wallet-to-chatgpt-so-ai-agents-can-pay-for-purchases/)
+- Wallet pays with a payment token instead of the card number, so card details aren't shared with the dot or the merchant. — [TechCrunch](https://techcrunch.com/2026/11/13/chatgpts-new-wallet-lets-ai-agents-shop-and-check-out-for-you/)
+- Reports say the token contains a substitute number, expiry and security code, and is scoped to merchant/amount with very short validity. Sources disagree on whether it runs on Visa Intelligent Commerce / Mastercard Agent Pay / Amex's framework, or OpenAI hasn't said. — [ppc.land](https://ppc.land/openai-hands-its-ai-agents-a-wallet-without-the-real-card-number-in-it/); [Stablecoin Insider](https://stablecoininsider.org/chatgpt-wallet/); [KuCoin news](https://www.kucoin.com/news/flash/openai-launches-chatgpt-wallet-with-tokenized-payments-for-ai-agents)
+- Merchants need no Wallet-specific integration: it "works out of the box with existing checkout pages and payment forms" (quoting OpenAI developer docs). The agent enters the token into the merchant's normal checkout. — [Stablecoin Insider](https://stablecoininsider.org/chatgpt-wallet/); [ecommerceparadise](https://ecommerceparadise.com/chatgpt-wallet-ai-agent-checkout/)
+- Each purchase requires biometric approval (Face ID/fingerprint). OpenAI takes no transaction-fee share at launch, merchants remain responsible for delivery/returns, and disputes go to card issuers. — [WebProNews](https://www.webpronews.com/openai-chatgpt-wallet-dots-agents-payments); [Stablecoin Insider](https://stablecoininsider.org/chatgpt-wallet/)
+- **Stripe MPP:** open standard by Stripe + Tempo, released Mar 18, 2026, payment-method agnostic. Stripe lists MPP on Tempo (USDC.e) and Solana (USDC). For Stripe merchants, MPP payments appear "in the Stripe API and Dashboard like any other transaction" and funds "settle into a business's existing balance, in their default currency, and on their standard payout schedule." — [Stripe docs: Machine payments](https://docs.stripe.com/payments/machine); [mpp.dev FAQ](https://mpp.dev/faq); [Forbes](https://www.forbes.com/sites/jonmarkman/2026/03/20/stripes-ai-payments-protocol-signals-machine-to-machine-commerce-era/)
+- **x402:** facilitator settle responses return a success flag, the on-chain transaction hash (0x-prefixed EVM hash or base58 Solana signature), the payer address and network. The result goes back via the `X-PAYMENT-RESPONSE` / `PAYMENT-RESPONSE` header. — [Coinbase CDP x402 settle](https://docs.cdp.coinbase.com/api-reference/v2/rest-api/x402-facilitator/settle-payment); [Avalanche academy](https://build.avax.network/academy/blockchain/x402-payment-infrastructure/03-technical-architecture/04-x-payment-response-header); [Circle Gateway settle](https://developers.circle.com/api-reference/gateway/all/settle-x402payment)
+
+### Inferences
+- For ChatGPT Wallet purchases the merchant sees a normal card-not-present transaction on a network token (token PAN, `last4` of the token or a dynamic last4, brand), settled in fiat by its acquirer. There is no crypto leg and no wallet address.
+- If OpenAI later adds stablecoins via Stripe (SPT stablecoin support was "coming soon" per Stripe-adjacent sources), the Stripe stablecoin model suggests the merchant would get fiat in its Stripe balance. Payer chain data would likely be held by Stripe, but this is unconfirmed.
+- Under direct x402 (no Stripe abstraction) the merchant/facilitator inherently learns the payer's address and tx hash, which links all on-chain activity from that address. That is a much larger cross-merchant privacy surface than card tokens.
+
+### Gaps
+- Could not read OpenAI's Wallet Terms / Wallet Privacy Notice or developer docs directly, so which tokenization program is used remains unconfirmed.
+- No primary source on whether Stripe MPP's merchant-side PaymentIntent exposes payer wallet address or tx hash in the API object.
+
+---
+
+## 4. Does OpenAI share cross-merchant purchase history with merchants? What do terms/spec/privacy say?
+
+### Takeaway
+I found no evidence that OpenAI shares cross-merchant purchase history, ChatGPT conversation content or a persistent OpenAI user identifier with merchants. Sources consistently describe merchants receiving only per-order data needed for fulfillment (name, email, phone, address, items, payment token). OpenAI keeps search and intent data. The merchant becomes an independent controller of the order data it receives and owns marketing consent.
+
+### Cited Findings
+- ChatGPT Wallet help article: a merchant may ask for your name, phone number, email, or billing/delivery address to complete checkout. Users are told to review the Wallet terms and Wallet Privacy Notice. — [OpenAI Help: Making purchases with ChatGPT Wallet](https://help.openai.com/en/articles/20001654-making-purchases-with-chatgpt-wallet) (snippet)
+- Press citing OpenAI: the dot hands the merchant the shipping address and contact details needed to fulfill the order, described as only what the order requires. — [TechCrunch](https://techcrunch.com/2026/11/13/chatgpts-new-wallet-lets-ai-agents-shop-and-check-out-for-you/); [aiinsightsnews](https://aiinsightsnews.net/chatgpt-wallet/)
+- In ACP, search-intent data stays with OpenAI and the merchant receives final order details. OpenAI handles transaction consent; the seller handles post-purchase marketing opt-ins and CCPA/GDPR obligations for data received. — [feedrobin](https://www.feedrobin.com/guides/chatgpt-instant-checkout-agentic-commerce-protocol); [efulfillmentservice](https://www.efulfillmentservice.com/2025/11/chatgpt-instant-checkout-what-ecommerce-sellers-need-to-know/); [Consentmo](https://www.consentmo.com/blog-posts/chatgpt-checkout-agentic-commerce-what-shopify-merchants-need-to-know-and-whats-still-unclear) (all secondary)
+- OpenAI warns that merchant sites may block shopping agents or flag legitimate Wallet purchases as fraud; fraud decisions are left to merchants. — [Stablecoin Insider](https://stablecoininsider.org/chatgpt-wallet/); [beri.net](https://www.beri.net/article/chatgpt-wallet-launch-dots-agent-checkout-merchant-network-token-web-bot-auth-cloudflare-akamai-allowlist-fraud-rules-product-feed)
+- The Delegated Payment Spec passes `risk_signals` (type/score/action) to the PSP, OpenAI's risk assessment rather than purchase history. — [Adyen](https://docs.adyen.com/online-payments/agentic-commerce/delegated-payment-spec)
+- One guide's claims about OpenAI data-retention windows (e.g. 30 days) could not be verified. — [search summary of third-party guides](https://www.cursor-ide.com/blog/openai-instant-checkout) (treat as unreliable)
+
+### Inferences
+- OpenAI's risk score is the only cross-context signal reaching the payment chain. It is an aggregate judgement, not history, and it goes to the PSP. The merchant may see it only if the PSP surfaces it.
+- Because the merchant gets the buyer's real email and address, it can build its own per-merchant history and match ChatGPT buyers to existing CRM records. Withholding is limited to the card number, conversation and intent data, and other-merchant activity.
+
+### Gaps
+- Did not obtain the primary text of OpenAI's merchant terms, the Instant Checkout merchant agreement, or the Wallet Privacy Notice. The "no cross-merchant sharing" conclusion is based on the absence of contrary evidence plus secondary summaries.
+
+---
+
+## 5. Comparison with other agentic-commerce schemes
+
+### Takeaway
+All major schemes hide the raw card from the merchant through tokenization and scoped mandates, but they differ on identity. Visa TAP and Mastercard Agent Pay add agent identity and consumer-recognition signals that can help merchants *recognize* returning customers. Google AP2/UCP give the merchant a signed cart/checkout mandate while the payment mandate goes to credential providers and networks. UCP adds OAuth identity linking to merchant accounts. PayPal mirrors ACP with merchant-bound single-use tokens. Shopify keeps the merchant as MoR with full customer data. Stripe MPP abstracts stablecoins to fiat. Raw x402 exposes payer chain addresses.
+
+### Cited Findings
+- **Google AP2:** v0.1 used Intent, Cart and Payment Mandates. v0.2 (tagged Apr 28, 2026) defines a Checkout Mandate and a Payment Mandate, each an SD-JWT with a versioned `vct` claim (e.g. `mandate.checkout.1`). The Merchant verifies the Checkout Mandate. The Credential Provider and Network (and merchant payment processor) verify the Payment Mandate, and the credential provider "releases a scoped payment credential or token." — [eco.com AP2 explained](https://eco.com/support/en/articles/14845479-ap2-agent-payments-protocol-explained); [ap2-protocol.net spec](https://ap2-protocol.net/en/specification); [safeguard.sh](https://safeguard.sh/resources/blog/agent-payments-protocol-ap2-explained-mandates-verifiable-credentials-and-risks)
+- A secondary explainer says the Payment Mandate contains "a minimal subset suitable for the network" and does not expose user PII or full cart to the network. — [Pritam substack](https://pritamr.substack.com/p/agent-payments-protocol); [Cloud Security Alliance](https://cloudsecurityalliance.org/blog/2025/10/06/secure-use-of-the-agent-payments-protocol-ap2-a-framework-for-trustworthy-ai-driven-transactions)
+- **Google/Shopify UCP:** merchant remains merchant of record and keeps customer data/relationship. Identity linking uses OAuth 2.0 so a buyer can authorize an agent. UCP specifies E.164 phones. Since Oct 16, 2026 Shopify's Checkout MCP and Cart MCP accept UCP buyer consent from agents that negotiate that extension. Shopify's standard ChatGPT agentic storefront redirects to the merchant's own checkout. — [ucp.dev checkout 2026-08-25](https://ucp.dev/2026-08-25/specification/shopping/checkout/); [anatta.io UCP vs ACP](https://anatta.io/agentic-commerce/shopify/ucp-vs-acp/); [revize.app](https://revize.app/blog/universal-commerce-protocol-ucp-shopify-developer-guide); [get-ryze.ai](https://www.get-ryze.ai/blog/shopify-chatgpt-agentic-storefronts-guide)
+- **Mastercard Agent Pay:** an Agentic Token issued via MDES binds cardholder, registered agent and mandate scope. At checkout it carries the agent ID with the cardholder token, and consumers set spend limits/merchant restrictions and can revoke. — [eco.com Mastercard vs Visa](https://eco.com/support/en/articles/15192003-mastercard-agent-pay-vs-visa-trusted-agent-2026-compared); [Stablecoin Insider VIC vs Agent Pay](https://stablecoininsider.org/visa-intelligent-commerce-vs-mastercard-agent-pay/)
+- **Visa Trusted Agent Protocol** (Oct 14, 2025, with Cloudflare, HTTP Message Signatures) carries agent intent, *consumer recognition* (whether the shopper has an account or prior interaction with the merchant) and optional payment information. Sources disagree on whether it travels as signed headers or a token. Mastercard developer docs say both networks pass consumer identity JWTs with agent requests. — [eco.com](https://eco.com/support/en/articles/15192003-mastercard-agent-pay-vs-visa-trusted-agent-2026-compared); [Mastercard Developers agentic guide](https://developer.mastercard.com/merchant-cloud/documentation/tutorials-and-guides/agentic-commerce-guide/22/)
+- **PayPal:** ACP via Braintree, a single-use merchant-ID-bound token with amount/time limits. PayPal acts as an intermediary handling routing and orchestration. No source found on whether PayPal payer IDs reach merchants. — [PayPal ACP docs](https://developer.paypal.com/agent-ready/agentic-commerce-protocol); [AI Magazine](https://aimagazine.com/news/how-paypal-is-partnering-with-openai-for-chatgpt-commerce)
+- **Stripe MPP:** stablecoin (USDC on Tempo/Solana) or SPT. Stripe merchants see standard PaymentIntents and get fiat payouts. — [Stripe Machine payments](https://docs.stripe.com/payments/machine); [eco.com Link Agents & x402](https://eco.com/support/en/articles/14839406-stripe-link-agents-and-x402-explained)
+- **Coinbase x402:** settlement returns the payer address and tx hash to the resource server. The settlement response is unsigned, and its trust comes from the chain. — [Coinbase CDP](https://docs.cdp.coinbase.com/api-reference/v2/rest-api/x402-facilitator/settle-payment); [IETF draft agent settlement records](https://datatracker.ietf.org/doc/html/draft-mih-agent-settlement-records-00)
+
+### Inferences
+- Merchant visibility, roughly from least to most:
+  - Token-only card schemes: ACP/SPT, Wallet, PayPal ACP. The merchant gets per-order PII, a token, brand/last4 and sometimes a fingerprint.
+  - Network agentic tokens (Visa/Mastercard). These add an agent ID and consumer-recognition signal.
+  - UCP with OAuth identity linking. The merchant gets the buyer's own merchant account.
+  - x402. The merchant gets a persistent, publicly traceable payer address.
+- ChatGPT/ACP is relatively privacy-preserving on the payment credential, but not on identity: the merchant still gets name, email, phone and address.
+
+### Gaps
+- No primary-source detail on exact fields in Visa TAP consumer-recognition objects, Mastercard agentic-token authorization messages as seen by merchants, or Shopify Checkout Kit inside ChatGPT specifically.
