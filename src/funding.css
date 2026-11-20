@@ -1,0 +1,24 @@
+.customer-funding-dialog[data-slot="dialog-content"] {
+  border-color: var(--border);
+  background: var(--card);
+}
+
+.customer-funding-dialog [data-slot="input"] {
+  border-color: var(--border-strong);
+  background: var(--card);
+  color: var(--foreground);
+}
+
+.customer-funding-dialog [data-slot="input"]::placeholder {
+  color: var(--muted-foreground);
+}
+
+.customer-funding-dialog [data-slot="dialog-description"] {
+  color: var(--muted-foreground);
+}
+
+.customer-funding-dialog .inline-error {
+  border-color: var(--error-border);
+  background: var(--error-surface);
+  color: var(--error-foreground);
+}

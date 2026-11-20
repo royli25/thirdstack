@@ -1,0 +1,94 @@
+.billing-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.billing-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  padding: 20px;
+}
+.billing-summary > div {
+  display: grid;
+  gap: 10px;
+}
+.billing-summary span,
+.billing-subtext {
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.billing-summary strong {
+  font-size: 17px;
+  font-weight: 500;
+}
+.billing-subtext {
+  display: block;
+  max-width: 220px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  margin-top: 5px;
+}
+.billing-empty {
+  padding: 24px 20px;
+  font-size: 13px;
+}
+.billing-empty p,
+.billing-dialog p {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 1.65;
+}
+.billing-dialog {
+  width: min(1050px, calc(100vw - 24px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  min-width: 0;
+}
+.billing-dialog .ws-table-scroll {
+  max-width: 100%;
+  min-width: 0;
+}
+.billing-form {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.billing-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.billing-label {
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+  min-width: 0;
+}
+.billing-label input,
+.billing-label textarea,
+.billing-label select {
+  width: 100%;
+  min-width: 0;
+}
+.billing-label select {
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--input);
+  border-radius: 6px;
+  background: var(--muted);
+  color: var(--foreground);
+}
+.billing-label textarea {
+  font-family: inherit;
+}
+@media (max-width: 640px) {
+  .billing-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .billing-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
