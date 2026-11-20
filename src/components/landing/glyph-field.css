@@ -1,0 +1,70 @@
+.th-glyph-field {
+  position: relative;
+  height: clamp(180px, 28svh, 310px);
+  overflow: hidden;
+  border-block: 1px solid var(--th-line);
+  background: color-mix(in srgb, var(--brand-accent) 6%, white);
+}
+
+.th-glyph-field pre {
+  position: absolute;
+  left: 50%;
+  width: max-content;
+  margin: 0;
+  transform: translateX(-50%);
+  font: 12px / 13px var(--font-sans);
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+.th-glyph-field pre span {
+  display: block;
+  background: radial-gradient(
+    ellipse at 22% 48%,
+    var(--brand-accent),
+    color-mix(in srgb, var(--brand-accent) 63%, white) 52%,
+    color-mix(in srgb, var(--brand-accent) 92%, black) 81%,
+    color-mix(in srgb, var(--brand-accent) 55%, white)
+  );
+  background-clip: text;
+  color: transparent;
+  animation: th-glyph-flow 12s cubic-bezier(0.77, 0, 0.175, 1) infinite
+    alternate;
+  animation-play-state: paused;
+}
+
+.th-glyph-field[data-running="true"] pre span {
+  animation-play-state: running;
+}
+
+.th-glyph-toggle {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  background: var(--card);
+  color: var(--foreground);
+}
+
+@keyframes th-glyph-flow {
+  from {
+    transform: translateX(-24px);
+  }
+  to {
+    transform: translateX(24px);
+  }
+}
+
+@media (max-width: 680px) {
+  .th-glyph-field {
+    height: 180px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .th-glyph-field pre span {
+    animation: none;
+  }
+  .th-glyph-toggle {
+    display: none;
+  }
+}
