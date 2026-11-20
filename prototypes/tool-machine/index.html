@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A disposable, interactive isometric study of how Two Hands connects intent to compatible tools and an agent's choice."
+    />
+    <title>The tool machine · Two Hands</title>
+    <link rel="icon" href="./assets/two-hands-mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./vendor/iso.css" />
+    <link rel="stylesheet" href="./machine.css" />
+  </head>
+  <body class="iso" data-theme="light">
+    <header class="page-header">
+      <a href="#" class="brand" aria-label="Two Hands, tool machine"
+        ><img
+          src="./assets/two-hands.svg"
+          width="124"
+          height="31"
+          alt="Two Hands"
+      /></a>
+      <div class="header-actions">
+        <span class="prototype-chip">Disposable prototype</span
+        ><button
+          type="button"
+          class="quiet-button"
+          id="theme"
+          aria-label="Switch to dark theme"
+        >
+          Dark paper
+        </button>
+      </div>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <h1 id="page-title">One intent. The right tool.</h1>
+          <p>Your agent brings the question. Two Hands brings the tools.</p>
+        </div>
+        <div class="intro-note">A tool router,<br />made mechanical.</div>
+      </section>
+      <form class="intent-form" id="intent-form">
+        <label for="query">Your intent</label>
+        <input
+          id="query"
+          name="query"
+          value="history of public libraries"
+          autocomplete="off"
+          maxlength="240"
+          required
+        />
+        <button class="run-button" type="submit" id="run">
+          Run the machine <span aria-hidden="true">↵</span>
+        </button>
+      </form>
+      <figure class="machine-figure">
+        <div class="iso-plate" id="plate">
+          <div class="plate-top">
+            <span>Fig. 01</span><span>The tool selector</span>
+            <div class="playback">
+              <button type="button" id="pause" aria-pressed="false">
+                Pause</button
+              ><span aria-hidden="true">/</span
+              ><button type="button" id="replay">Replay</button>
+            </div>
+          </div>
+          <div
+            class="iso-stage"
+            id="stage"
+            tabindex="0"
+            role="group"
+            aria-label="Interactive tool selector. Left and right arrows inspect tools; Enter runs the inspected tool. Escape pauses."
+          >
+            <div id="drawing">
+              <p class="loading">Assembling the machine…</p>
+            </div>
+          </div>
+          <div class="plate-bottom">
+            <span class="interaction-hint"
+              >Hover to inspect <span aria-hidden="true">·</span> ← → to
+              explore</span
+            ><span class="machine-readout" data-readout>Assembling</span>
+          </div>
+        </div>
+        <figcaption class="tool-selector">
+          <div class="selector-heading">
+            <span><strong>4</strong> compatible demo tools</span
+            ><span>Choose as the agent</span>
+          </div>
+          <div
+            class="tool-options"
+            id="tool-options"
+            role="group"
+            aria-label="Agent's tool choice"
+          ></div>
+        </figcaption>
+      </figure>
+      <section class="process" aria-label="How the machine works">
+        <div class="process-step" data-step="0">
+          <span class="step-number">01</span>
+          <div>
+            <h2>Intent in</h2>
+            <p>The task stays yours.</p>
+          </div>
+        </div>
+        <div class="process-step" data-step="1">
+          <span class="step-number">02</span>
+          <div>
+            <h2>Tools surface</h2>
+            <p>Compatible options, visible estimates.</p>
+          </div>
+        </div>
+        <div class="process-step" data-step="2">
+          <span class="step-number">03</span>
+          <div>
+            <h2>The agent chooses</h2>
+            <p>One cartridge engages.</p>
+          </div>
+        </div>
+        <div class="process-step" data-step="3">
+          <span class="step-number">04</span>
+          <div>
+            <h2>A call comes out</h2>
+            <p>Ready for the agent to use.</p>
+          </div>
+        </div>
+      </section>
+      <section class="output" aria-labelledby="output-heading">
+        <div class="output-heading">
+          <div>
+            <h2 id="output-heading">The output ticket</h2>
+            <p id="output-description">
+              A sample call, prepared from your intent.
+            </p>
+          </div>
+          <div class="output-actions">
+            <button
+              class="format-button"
+              type="button"
+              data-format="mcp"
+              aria-pressed="true"
+            >
+              MCP call</button
+            ><button
+              class="format-button"
+              type="button"
+              data-format="json"
+              aria-pressed="false"
+            >
+              JSON</button
+            ><button class="copy-button" type="button" id="copy">Copy</button>
+          </div>
+        </div>
+        <pre id="call"><code>Preparing the machine…</code></pre>
+        <div class="output-footer">
+          <span id="status-title">Intent enters</span
+          ><span id="status-detail"
+            >The agent brings the task to Two Hands.</span
+          >
+        </div>
+      </section>
+      <footer class="page-footer">
+        <span>Two Hands · Mechanical study 001</span>
+        <p>
+          Illustrative demo. Four tools and sample estimates from the reference
+          image. No live calls or spending.
+        </p>
+      </footer>
+      <p id="announcement" class="sr-only" aria-live="polite"></p>
+      <p id="load-error" role="alert" hidden></p>
+    </main>
+    <script type="module" src="./machine.mjs"></script>
+  </body>
+</html>
