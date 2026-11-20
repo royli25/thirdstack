@@ -1,0 +1,24 @@
+{
+  "order": [
+    "Codex",
+    "Claude Code",
+    "Grok Bot",
+    "Antigravity"
+  ],
+  "individual_pngs": "512 \u00d7 512 pixels, RGBA, transparent",
+  "combined_png": "2432 \u00d7 512 pixels, RGBA, transparent",
+  "sources": {
+    "codex": "https://github.com/lobehub/lobe-icons/blob/master/packages/static-svg/icons/codex.svg",
+    "claude-code": "https://github.com/lobehub/lobe-icons/blob/master/packages/static-svg/icons/claudecode-color.svg",
+    "grokbot": "https://github.com/lobehub/lobe-icons/blob/master/packages/static-svg/icons/grokbot.svg",
+    "antigravity": "https://antigravity.google/press"
+  },
+  "figma_reference": "https://www.figma.com/design/WjofMoGOzEmDvoRdERi1O5/Untitled?node-id=208-2455",
+  "figma_modified": true,
+  "figma_logo_node_ids": [
+    "209:3073",
+    "209:3067",
+    "209:3076",
+    "209:3077"
+  ]
+}
