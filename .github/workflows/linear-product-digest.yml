@@ -1,0 +1,50 @@
+name: Product morning digest
+
+on:
+  schedule:
+    - cron: "0 5 * * *"
+      timezone: America/Los_Angeles
+  workflow_dispatch:
+    inputs:
+      send:
+        description: Send to Instinct (requires confirmed routing)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linear-product-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    # No recurring delivery until credentials and the Instinct handoff are tested.
+    if: github.event_name == 'workflow_dispatch' || vars.LINEAR_DIGEST_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Verify digest behavior without providers
+        run: python -m unittest discover -s automations/linear-instinct -p 'test_*.py'
+      - name: Read Product and prepare or send the digest
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_DIGEST_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_DIGEST_API_KEY }}
+          OPENAI_DIGEST_MODEL: ${{ vars.OPENAI_DIGEST_MODEL }}
+          RESEND_API_KEY: ${{ secrets.LINEAR_DIGEST_RESEND_API_KEY }}
+          DIGEST_FROM_EMAIL: ${{ vars.LINEAR_DIGEST_FROM_EMAIL }}
+          INSTINCT_ROUTING_CONFIRMED: ${{ vars.INSTINCT_ROUTING_CONFIRMED }}
+          SHOULD_SEND: ${{ github.event_name == 'schedule' || inputs.send }}
+        run: |
+          if [ "$SHOULD_SEND" = "true" ]; then
+            python automations/linear-instinct/digest.py --send
+          else
+            python automations/linear-instinct/digest.py
+          fi

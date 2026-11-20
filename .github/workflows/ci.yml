@@ -1,0 +1,193 @@
+name: Verify workspace
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+# A newer push to the same branch or pull request supersedes the older run.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+# Artifact policy (enforced by tests/ci-workflow.test.ts): uploads are small
+# diagnostic files only, kept for at most 3 days, and never fail the run.
+# Artifact storage is a small shared quota; a full quota must not turn a
+# passing build red. Never upload container images here.
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run verify:release
+      - run: npm run format:check
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        continue-on-error: true
+        with:
+          name: browser-verification
+          path: test-results/
+          retention-days: 3
+  postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:18-bookworm
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: isolated_ci_fixture
+          POSTGRES_DB: octolab_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d octolab_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Required PostgreSQL migration, account and isolation suites
+        run: npm test -- --maxWorkers=1
+        env:
+          OCTOLAB_TEST_POSTGRES_URL: postgresql://postgres:isolated_ci_fixture@127.0.0.1:5432/octolab_ci
+          OCTOLAB_WORKBENCH_TEST_POSTGRES_URL: postgresql://postgres:isolated_ci_fixture@127.0.0.1:5432/octolab_ci
+          OCTOLAB_BILLING_TEST_POSTGRES_URL: postgresql://postgres:isolated_ci_fixture@127.0.0.1:5432/octolab_ci
+          OCTOLAB_ADMIN_SETTINGS_TEST_POSTGRES_URL: postgresql://postgres:isolated_ci_fixture@127.0.0.1:5432/octolab_ci
+          OCTOLAB_DISCONNECT_TEST_POSTGRES_URL: postgresql://postgres:isolated_ci_fixture@127.0.0.1:5432/octolab_ci
+      - name: Use matching PostgreSQL backup clients
+        run: |
+          mkdir -p "$RUNNER_TEMP/pg-tools"
+          for tool in pg_dump pg_restore; do
+            cat > "$RUNNER_TEMP/pg-tools/$tool" <<'PG_TOOL'
+          #!/bin/sh
+          tool=$(basename "$0")
+          exec docker run --rm -i --network host -e PGHOST -e PGPORT -e PGDATABASE -e PGUSER -e PGPASSWORD -e PGSSLMODE -e PGCONNECT_TIMEOUT --entrypoint "$tool" postgres:18-bookworm "$@"
+          PG_TOOL
+            chmod 700 "$RUNNER_TEMP/pg-tools/$tool"
+          done
+          echo "$RUNNER_TEMP/pg-tools" >> "$GITHUB_PATH"
+      - name: Required encrypted restore drill
+        run: npm run test:restore
+        env:
+          OCTOLAB_RESTORE_DRILL_URL: postgresql://postgres:isolated_ci_fixture@127.0.0.1:5432/postgres
+      - uses: actions/upload-artifact@v7
+        if: always()
+        continue-on-error: true
+        with:
+          name: disposable-restore-evidence
+          path: test-results/restore-drill/restore-report.json
+          retention-days: 3
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:18-bookworm
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: isolated_ci_fixture
+          POSTGRES_DB: octolab_container
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d octolab_container"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:isolated_ci_fixture@127.0.0.1:5432/octolab_container
+      LEGACY_WORKSPACE_ID: 00000000-0000-4000-8000-000000000001
+      SUPABASE_URL: https://fixture.supabase.co
+      SUPABASE_PUBLISHABLE_KEY: sb_publishable_isolated_fixture_only
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build production and recovery artifacts
+        run: |
+          docker build --build-arg SOURCE_REVISION="$GITHUB_SHA" -t octolab:ci .
+          docker build --target recovery --build-arg SOURCE_REVISION="$GITHUB_SHA" -t octolab-recovery:ci .
+          docker run --rm --network none --entrypoint node octolab:ci scripts/verify-release-artifact.mjs
+          docker run --rm --network none octolab-recovery:ci help
+      - run: docker run -d --network none --name octolab-ci -e API_TOKEN=ci-runtime-validation-token-0001 octolab:ci
+      - name: Verify packaged local runtime and restart recovery
+        run: |
+          for attempt in {1..30}; do
+            if docker exec octolab-ci node -e 'fetch("http://127.0.0.1:3001/healthz").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))'; then break; fi
+            sleep 1
+          done
+          docker exec -i octolab-ci node --input-type=module - < tests/container-smoke.mjs
+          docker exec -i octolab-ci node --input-type=module - < tests/container-observation-smoke.mjs
+          docker exec -i octolab-ci node --input-type=module - < tests/container-provider-lab-smoke.mjs
+          docker restart --time 130 octolab-ci
+          for attempt in {1..30}; do
+            if docker exec octolab-ci node -e 'fetch("http://127.0.0.1:3001/healthz").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))'; then break; fi
+            sleep 1
+          done
+          docker exec -i octolab-ci node --input-type=module - persist < tests/container-smoke.mjs
+          docker exec -i octolab-ci node --input-type=module - persist < tests/container-observation-smoke.mjs
+          docker exec -i octolab-ci node --input-type=module - persist < tests/container-provider-lab-smoke.mjs
+      - name: Verify migrations execute from the production image without development tools
+        run: |
+          docker run --rm --network host -e DATABASE_URL -e LEGACY_WORKSPACE_ID octolab:ci npm run db:migrate
+          docker run --rm --network host -e DATABASE_URL -e LEGACY_WORKSPACE_ID octolab:ci npm run db:migrate
+          docker run --rm -i --network host -e DATABASE_URL --entrypoint node octolab:ci --input-type=module - bootstrap < tests/container-postgres-smoke.mjs
+      - name: Verify packaged PostgreSQL startup and access boundary
+        run: |
+          docker run -d --network host --name octolab-pg-ci -e STORAGE_BACKEND=postgres -e DATABASE_URL -e LEGACY_WORKSPACE_ID -e SUPABASE_URL -e SUPABASE_PUBLISHABLE_KEY octolab:ci
+          for attempt in {1..30}; do
+            if docker exec octolab-pg-ci node -e 'fetch("http://127.0.0.1:3001/healthz").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))'; then break; fi
+            sleep 1
+          done
+          docker exec -i octolab-pg-ci node --input-type=module - < tests/container-postgres-smoke.mjs
+          if docker run --rm --network host -e DATABASE_URL -e LEGACY_WORKSPACE_ID octolab:ci npm run db:migrate; then
+            echo "Migration unexpectedly ran while the API owned the database"
+            exit 1
+          fi
+          docker restart --time 130 octolab-pg-ci
+          for attempt in {1..30}; do
+            if docker exec octolab-pg-ci node -e 'fetch("http://127.0.0.1:3001/healthz").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))'; then break; fi
+            sleep 1
+          done
+          docker exec -i octolab-pg-ci node --input-type=module - < tests/container-postgres-smoke.mjs
+          docker stop --time 130 octolab-pg-ci
+          docker run --rm -i --network host -e DATABASE_URL --entrypoint node octolab:ci --input-type=module - prepare-recovery < tests/container-postgres-smoke.mjs
+      - name: Verify encrypted backup and fresh restore from the recovery image
+        env:
+          BACKUP_PASSPHRASE: disposable_ci_recovery_fixture_only_0001
+        run: |
+          mkdir -p "$RUNNER_TEMP/octolab-recovery"
+          chmod 700 "$RUNNER_TEMP/octolab-recovery"
+          docker run --rm --network host --user "$(id -u):$(id -g)" -v "$RUNNER_TEMP/octolab-recovery:/backups" -e BACKUP_DATABASE_URL="$DATABASE_URL" -e BACKUP_FILE=/backups/application.enc -e BACKUP_PASSPHRASE octolab-recovery:ci backup > "$RUNNER_TEMP/octolab-recovery/backup-report.json"
+          docker run --rm -i --network host -e DATABASE_URL --entrypoint node octolab:ci --input-type=module - recovery-target < tests/container-postgres-smoke.mjs
+          docker run --rm --network host --user "$(id -u):$(id -g)" -v "$RUNNER_TEMP/octolab-recovery:/backups" -e RESTORE_DATABASE_URL=postgresql://postgres:isolated_ci_fixture@127.0.0.1:5432/octolab_container_restored -e RESTORE_CONFIRM_DATABASE=octolab_container_restored -e BACKUP_FILE=/backups/application.enc -e BACKUP_PASSPHRASE octolab-recovery:ci restore > "$RUNNER_TEMP/octolab-recovery/restore-report.json"
+          docker run -d --network host --name octolab-restored-ci -e STORAGE_BACKEND=postgres -e DATABASE_URL=postgresql://postgres:isolated_ci_fixture@127.0.0.1:5432/octolab_container_restored -e LEGACY_WORKSPACE_ID -e SUPABASE_URL -e SUPABASE_PUBLISHABLE_KEY octolab:ci
+          for attempt in {1..30}; do
+            if docker exec octolab-restored-ci node -e 'fetch("http://127.0.0.1:3001/healthz").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))'; then break; fi
+            sleep 1
+          done
+          docker exec -i octolab-restored-ci node --input-type=module - restored < tests/container-postgres-smoke.mjs
+      - uses: actions/upload-artifact@v7
+        if: always()
+        continue-on-error: true
+        with:
+          name: packaged-restore-evidence
+          path: ${{ runner.temp }}/octolab-recovery/*-report.json
+          retention-days: 3
+      # The images are rebuilt from source by `docker build`; they are not
+      # stored as artifacts (each copy was ~350 MB and exhausted the quota).
+      - name: Container logs
+        if: failure()
+        run: |
+          for container in octolab-ci octolab-pg-ci octolab-restored-ci; do docker logs "$container" 2>/dev/null || true; done
+      - name: Clean up disposable containers
+        if: always()
+        run: docker rm -f octolab-ci octolab-pg-ci octolab-restored-ci 2>/dev/null || true
