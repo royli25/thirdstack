@@ -1,0 +1,94 @@
+.connect-agent-dialog[data-slot="dialog-content"] {
+  width: min(620px, calc(100vw - 32px));
+  max-width: min(620px, calc(100vw - 32px));
+  max-height: min(820px, calc(100dvh - 40px));
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.connect-agent-dialog > [data-slot="dialog-header"] {
+  padding: 26px 52px 22px 26px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.connect-agent-dialog .agent-connection-instructions {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px 26px;
+}
+
+.connect-agent-dialog .ws-client-picker {
+  flex-wrap: wrap;
+  padding: 0;
+  margin-bottom: 22px;
+}
+
+.connect-agent-dialog .ws-client-picker button {
+  min-height: 36px;
+  font-size: 12px;
+}
+
+.ws-client-picker .agent-client-logo {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex: none;
+}
+
+.connect-agent-dialog .ws-panel-note {
+  margin: 16px 0 24px;
+  padding: 0;
+  border: 0;
+  font-size: 12px;
+}
+
+.connect-agent-dialog .ws-setup-steps {
+  padding: 0;
+}
+
+.connect-agent-dialog .ws-setup-steps strong {
+  font-size: 13px;
+}
+
+.connect-agent-dialog .ws-setup-steps p {
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.ws-setup-steps .ws-remote-configuration {
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.ws-setup-steps .ws-remote-configuration code {
+  flex: 1 1 240px;
+  min-width: 0;
+  white-space: pre-wrap;
+}
+
+.ws-remote-configuration button {
+  flex: none;
+}
+
+@media (max-width: 600px) {
+  .connect-agent-dialog > [data-slot="dialog-header"] {
+    padding: 22px 44px 20px 20px;
+  }
+
+  .connect-agent-dialog .agent-connection-instructions {
+    padding: 20px;
+  }
+
+  .connect-agent-dialog .ws-setup-steps li {
+    gap: 10px;
+  }
+
+  .connect-agent-dialog .command-box {
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+}

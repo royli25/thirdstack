@@ -1,0 +1,229 @@
+/* Company connectors: list on the left, selected connector on the right. */
+.connectors-heading-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.connectors-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  gap: var(--grid-gap, 16px);
+  align-items: start;
+}
+/* The tools table needs the full width; stack the list above it until there is room. */
+@media (max-width: 1240px) {
+  .connectors-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .connectors-list ul {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+.connectors-list ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.connectors-list button {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding: 12px 14px;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--foreground);
+  cursor: pointer;
+}
+.connectors-list button:hover {
+  border-color: var(--border-strong);
+}
+.connectors-list button[aria-pressed="true"] {
+  border-color: var(--border-strong);
+  background: var(--muted);
+}
+.connectors-list button:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+.connector-list-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+.connectors-list small,
+.connectors-empty,
+.connectors-form small,
+.connector-tool-text {
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+.connector-tool-text {
+  margin: 4px 0 0;
+  max-width: 52ch;
+}
+.connector-detail {
+  display: grid;
+  gap: var(--grid-gap, 16px);
+  min-width: 0;
+}
+.connector-status {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  width: fit-content;
+  min-height: 22px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 11px;
+  font-weight: 450;
+  white-space: nowrap;
+}
+.connector-status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-right: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.55;
+}
+.connector-status[data-status="approved"] {
+  color: var(--foreground);
+}
+.connector-status[data-status="approved"]::before {
+  background: var(--brand-accent);
+  opacity: 1;
+}
+.connector-status[data-status="rejected"],
+.connector-status[data-status="suspended"] {
+  background: var(--error-surface);
+  color: var(--error-foreground);
+}
+.connector-facts dd {
+  min-width: 0;
+}
+.connector-endpoint {
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+}
+.connector-warning {
+  color: var(--error-foreground);
+}
+.connectors-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.connectors-form {
+  max-width: 640px;
+}
+.connector-edit {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.connector-tools {
+  min-width: 620px;
+  white-space: normal;
+}
+.connector-tools td:not(:first-child),
+.connector-tools th:not(:first-child) {
+  white-space: nowrap;
+  width: 1%;
+}
+.connector-tools td {
+  vertical-align: top;
+}
+.connector-tools td:first-child {
+  min-width: 260px;
+}
+.connector-tools tr[data-status="removed"] td {
+  color: var(--muted-foreground);
+}
+.connector-tools select,
+.connectors-form select {
+  min-height: 34px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 13px;
+}
+.connector-price {
+  width: 96px;
+}
+.connector-schema {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.connector-schema summary {
+  cursor: pointer;
+}
+.connector-schema pre {
+  max-height: 260px;
+  max-width: 100%;
+  overflow: auto;
+  margin: 8px 0 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--muted);
+  font-size: 11px;
+}
+.connector-history {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.connector-history li {
+  display: grid;
+  gap: 2px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.connector-history li:last-child {
+  border-bottom: 0;
+}
+.connector-history span {
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+/* Connector offers in a session's discovery trace. */
+.connector-offers {
+  margin-top: 16px;
+}
+.connector-offers ul {
+  display: grid;
+  gap: 10px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.connector-offers li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.connector-offers li .field-hint {
+  flex-basis: 100%;
+  margin: 0;
+}
