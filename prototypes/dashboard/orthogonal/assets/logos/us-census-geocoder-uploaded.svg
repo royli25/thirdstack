@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="96" fill="#2E5A88"/>
+  <!-- block grid: generic "census tracts / blocks" glyph, Orthogonal's own drawing -->
+  <g fill="none" stroke="#BFD3E8" stroke-width="10" opacity="0.7">
+    <rect x="96" y="150" width="320" height="250" rx="16"/>
+    <path d="M96 233 H416 M96 316 H416 M203 150 V400 M309 150 V400"/>
+  </g>
+  <!-- map pin: geocoding -->
+  <path d="M256 92 C206 92 168 130 168 180 C168 246 256 330 256 330 C256 330 344 246 344 180 C344 130 306 92 256 92 Z" fill="#F4B942" stroke="#2E5A88" stroke-width="10"/>
+  <circle cx="256" cy="180" r="34" fill="#2E5A88"/>
+</svg>
