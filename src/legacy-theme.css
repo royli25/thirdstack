@@ -1,0 +1,69 @@
+.legacy-root {
+  .return-observation {
+    position: fixed;
+    bottom: 18px;
+    left: 22px;
+    z-index: 60;
+    font-size: 11px;
+    color: var(--muted-foreground);
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+  .eyebrow,
+  .space-label,
+  .beta,
+  .hero-tag {
+    display: none;
+  }
+  * {
+    text-transform: none !important;
+    letter-spacing: normal;
+  }
+  h1 {
+    font-size: 28px;
+    letter-spacing: -0.6px;
+  }
+  .sidebar-bottom {
+    padding-bottom: 50px;
+  }
+  .score-grid,
+  .event-details,
+  .candidate-table > div,
+  .intent-summary {
+    background: var(--muted);
+  }
+  .legacy-workflow-note {
+    position: fixed;
+    top: 0;
+    left: 255px;
+    right: 0;
+    z-index: 45;
+    padding: 8px 24px;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: 11px;
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar {
+    padding-top: 36px;
+    min-height: 105px;
+  }
+  @media (max-width: 760px) {
+    .return-observation {
+      position: static;
+      display: block;
+      margin: 10px 15px;
+      width: fit-content;
+    }
+    .legacy-workflow-note {
+      position: static;
+      padding: 12px 16px;
+    }
+    .topbar {
+      padding-top: 0;
+      min-height: 65px;
+    }
+  }
+}

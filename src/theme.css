@@ -1,0 +1,48 @@
+:root {
+  color-scheme: light;
+  --background: #f8f8f8;
+  --foreground: #202020;
+  --card: #fff;
+  --popover: #fff;
+  --sidebar: #f3f3f3;
+  --secondary: #ededed;
+  --muted: #f2f2f2;
+  --muted-foreground: #595959;
+  --accent: #e9e9e9;
+  --border: #dedede;
+  --border-strong: #bdbdbd;
+  --input: #888;
+
+  /* Approved blue: Figma WjofMoGOzEmDvoRdERi1O5, frame 71:2861. */
+  --brand-accent: #3aa0ed;
+  --brand-border: #318cde;
+  --primary: var(--brand-accent);
+  --primary-foreground: #fff;
+  --ring: var(--brand-accent);
+  --selection: color-mix(in srgb, var(--brand-accent) 18%, white);
+  --destructive: #a32e2e;
+  --error-foreground: #932c2c;
+  --error-surface: #fff4f4;
+  --error-border: #e7bcbc;
+
+  --data-ink: #515151;
+  --data-muted: #737373;
+  --data-track: #e9e9e9;
+  --overlay: rgb(20 20 20 / 48%);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 6%);
+  --shadow-lg: 0 12px 32px rgb(0 0 0 / 13%), 0 2px 6px rgb(0 0 0 / 6%);
+  --radius: 10px;
+  --surface-radius: 11px;
+  --panel-padding: 20px;
+  --grid-gap: 16px;
+  --panel-surface: var(--card);
+  --panel-subtle: var(--muted);
+  --panel-line: var(--border);
+  --control-surface: var(--card);
+  --control-border: var(--input);
+  --placeholder-color: var(--muted-foreground);
+  --dialog-surface: var(--popover);
+  --dialog-border: var(--border);
+  --dialog-muted: var(--muted-foreground);
+  --dialog-text: var(--foreground);
+}

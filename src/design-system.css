@@ -1,0 +1,577 @@
+:root {
+  --navigation-button-fill: var(--card);
+  --navigation-button-edge: linear-gradient(
+    to bottom,
+    var(--border),
+    var(--border-strong) 97.708%
+  );
+  --navigation-button-glow: inset 0 0 3px 1px rgb(255 255 255 / 24%);
+  --navigation-button-shadow: var(--shadow-sm);
+}
+
+/* Draw the navigation stroke and highlight without changing row dimensions. */
+:is(
+  .obs-sidebar nav > a,
+  .obs-sidebar nav .ws-nav-group > a,
+  .mobile-sidebar-content nav > a,
+  .mobile-sidebar-content nav .ws-nav-group > a,
+  .portal-mobile-nav nav > a,
+  .account-menu-trigger
+) {
+  position: relative;
+  isolation: isolate;
+  &::before,
+  &::after {
+    content: var(--surface-decoration, none);
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  &::before {
+    box-shadow: var(--surface-glow);
+  }
+  &::after {
+    padding: 1px;
+    background: var(--surface-edge);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+  }
+}
+
+/* Keep labels clean, including nested text and buttons rendered as links.
+   Report the approved blue's contrast honestly; never add a text halo. */
+:is(button, [role="button"], [data-slot="button"], .button),
+:is(button, [role="button"], [data-slot="button"], .button) * {
+  text-shadow: none;
+}
+
+[data-slot="button"][data-variant="default"],
+.legacy-root .button.primary {
+  --button-fill: #1b1b1b;
+  --button-hover: #2b2b2b;
+  --button-border: #111;
+}
+[data-slot="button"][data-variant="brand"] {
+  --button-fill: var(--brand-accent);
+  --button-hover: var(--brand-accent);
+  --button-border: var(--brand-border);
+}
+[data-slot="button"]:is([data-variant="default"], [data-variant="brand"]) {
+  border-radius: 8px;
+}
+:is(
+  [data-slot="button"]:is([data-variant="default"], [data-variant="brand"]),
+  .legacy-root .button.primary
+) {
+  color: var(--primary-foreground);
+  border: 1px solid var(--button-border);
+  background-color: var(--button-fill);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 15%);
+
+  &:hover:not(:disabled) {
+    background-color: var(--button-hover);
+  }
+  &:active:not(:disabled) {
+    background-color: var(--button-fill);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 20%);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+  &:disabled {
+    background-color: var(--secondary);
+    color: var(--muted-foreground);
+    box-shadow: none;
+    border-color: var(--border);
+    opacity: 0.65;
+    text-shadow: none;
+  }
+}
+[data-slot="button"][data-variant="link"] {
+  color: var(--brand-accent);
+}
+[data-slot="button"][data-variant="outline"],
+[data-slot="button"][data-variant="secondary"] {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  box-shadow: none;
+}
+[data-slot="button"][data-variant="outline"]:hover,
+[data-slot="button"][data-variant="secondary"]:hover {
+  background: var(--secondary);
+  border-color: var(--border-strong);
+}
+
+.observation-shell .obs-sidebar {
+  background: var(--sidebar);
+  border-color: var(--border);
+  padding: 24px 14px 16px;
+}
+.observation-shell .obs-brand {
+  padding: 0 12px 28px;
+}
+.observation-shell .obs-sidebar nav a.selected svg,
+.mobile-sidebar-content a.selected svg {
+  color: var(--foreground);
+}
+/* Keep selection shadows inside the navigation scrollport without moving links. */
+.obs-sidebar:has(.ws-nav-group) > nav,
+.mobile-sidebar-content:has(.ws-nav-group) > nav {
+  padding: 8px;
+  margin: -8px;
+}
+.obs-sidebar:has(.ws-nav-group) > nav {
+  margin-bottom: 16px;
+}
+/* Offset the new border within the existing navigation row dimensions. */
+.obs-sidebar nav > a,
+.obs-sidebar nav .ws-nav-group > a,
+.mobile-sidebar-content nav > a,
+.mobile-sidebar-content nav .ws-nav-group > a {
+  border: 1px solid transparent;
+  padding: 9px 11px;
+}
+.obs-sidebar:has(.ws-nav-group) nav a,
+.mobile-sidebar-content:has(.ws-nav-group) nav a {
+  padding: 7px 11px;
+}
+.portal-mobile-nav nav a {
+  border: 1px solid transparent;
+  padding: 8px;
+}
+/* Light navigation surface shared by selected links and the account trigger. */
+.obs-sidebar nav > a.selected,
+.obs-sidebar nav .ws-nav-group > a.selected,
+.mobile-sidebar-content nav > a.selected,
+.mobile-sidebar-content nav .ws-nav-group > a.selected,
+.portal-mobile-nav nav > a.selected {
+  --surface-decoration: "";
+  --surface-edge: var(--navigation-button-edge);
+  --surface-glow: var(--navigation-button-glow);
+  background: var(--navigation-button-fill);
+  border-color: transparent;
+  box-shadow: var(--navigation-button-shadow);
+}
+/* Hover acknowledges the pointer without looking like the current page. */
+.obs-sidebar nav > a:hover:not(.selected),
+.obs-sidebar nav .ws-nav-group > a:hover:not(.selected),
+.mobile-sidebar-content nav > a:hover:not(.selected),
+.mobile-sidebar-content nav .ws-nav-group > a:hover:not(.selected),
+.portal-mobile-nav nav > a:hover:not(.selected) {
+  --surface-decoration: none;
+  background: var(--card);
+  border-color: transparent;
+  box-shadow: none;
+}
+.obs-sidebar .sidebar-bottom {
+  padding-top: 20px;
+}
+.obs-sidebar .account-controls,
+.mobile-sidebar-content .account-controls,
+.portal-mobile-nav .account-controls {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.observation-shell .obs-topbar {
+  background: var(--background);
+  border-color: var(--border);
+}
+/* Product pages share the dashboard's flat surfaces and divided panel headers. */
+.observation-shell .product-panel {
+  min-width: 0;
+  gap: 0;
+  padding: 0;
+  margin-bottom: var(--grid-gap);
+  border-color: var(--border);
+  border-radius: var(--surface-radius);
+  background: var(--card);
+  box-shadow: none;
+}
+.product-panel > [data-slot="card-header"] {
+  min-width: 0;
+  padding: 19px var(--panel-padding) 16px;
+  border-bottom: 1px solid var(--border);
+}
+.product-panel > [data-slot="card-header"] > div {
+  min-width: 0;
+}
+.product-panel > [data-slot="card-content"] {
+  min-width: 0;
+  padding: var(--panel-padding);
+}
+.product-panel [data-slot="card-title"] {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.observation-shell
+  :is(
+    .company-metric-grid,
+    .explanation-grid,
+    .tool-grid,
+    .portal-review-grid,
+    .tool-access-grid,
+    .company-main-grid,
+    .lab-setup-grid,
+    .platform-provider-grid,
+    .platform-fields
+  ) {
+  gap: var(--grid-gap);
+}
+.observation-shell :is(.company-metric, .platform-provider-grid fieldset) {
+  border-radius: var(--surface-radius);
+  background: var(--card);
+}
+.observation-shell
+  :is(
+    .tool-settings-view,
+    .tool-settings-view form,
+    .platform-settings-controls
+  ) {
+  gap: var(--grid-gap);
+}
+.tool-settings-view .page-heading {
+  margin-bottom: 12px;
+}
+.observation-shell .provider-page {
+  gap: var(--grid-gap);
+}
+.observation-shell
+  :is(
+    .provider-page,
+    .company-main-grid,
+    .lab-setup-grid,
+    .tool-grid,
+    .explanation-grid,
+    .tool-settings-view,
+    .platform-settings-controls,
+    .detail-aside
+  )
+  > .product-panel {
+  margin-bottom: 0;
+}
+.platform-settings-controls > [data-slot="button"] {
+  justify-self: start;
+  min-width: 132px;
+}
+.tool-settings-view > p {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.platform-provider-grid label,
+.platform-fields label {
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+.platform-provider-grid legend {
+  font-size: 13px;
+  font-weight: 550;
+}
+.tool-workspace .ws-metrics,
+.tool-workspace .ws-chart-grid,
+.tool-workspace .ws-catalog-grid {
+  gap: var(--grid-gap);
+}
+.tool-workspace .ws-metrics,
+.tool-workspace .ws-panel {
+  margin-bottom: var(--grid-gap);
+}
+.tool-workspace .ws-metric,
+.tool-workspace .ws-panel,
+.tool-workspace .ws-tool-card {
+  border-color: var(--border);
+  border-radius: 11px;
+  background: var(--card);
+}
+.tool-workspace .ws-chart-grid {
+  grid-template-columns: minmax(0, 1.85fr) minmax(235px, 1fr);
+}
+.tool-workspace .ws-panel > header {
+  padding: 19px 20px 16px;
+}
+.tool-workspace .ws-connect-banner {
+  background: var(--card);
+  border-color: var(--border);
+  border-radius: 11px;
+  margin: 0 0 var(--grid-gap);
+}
+.tool-workspace .ws-metric:hover,
+.tool-workspace .ws-tool-card:hover {
+  border-color: var(--border-strong);
+}
+
+/* Soft pills stay quiet so tool results and charts remain the primary content. */
+[data-slot="badge"],
+.tool-workspace .ws-status,
+.tool-workspace .ws-tool-tags span,
+.portal-status {
+  min-height: 23px;
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 10px;
+  font-weight: 450;
+  line-height: 1.5;
+  gap: 6px;
+}
+.tool-workspace .ws-status-failed {
+  color: var(--error-foreground);
+}
+.tool-workspace .ws-category-tabs button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--border-strong);
+  color: var(--foreground);
+}
+.tool-workspace .ws-category-tabs button {
+  align-items: center;
+  padding: 6px 11px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--muted);
+}
+.tool-workspace .ws-category-tabs {
+  gap: 8px;
+  border: 0;
+  flex-wrap: wrap;
+}
+.tool-workspace .ws-category-tabs span {
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.account-menu-trigger {
+  --surface-decoration: "";
+  --surface-edge: var(--navigation-button-edge);
+  --surface-glow: var(--navigation-button-glow);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 57px;
+  padding: 9px 10px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--navigation-button-fill);
+  box-shadow: var(--navigation-button-shadow);
+  color: var(--foreground);
+  text-align: left;
+  cursor: pointer;
+}
+.account-menu-trigger:hover,
+.account-menu-trigger[data-state="open"] {
+  background: var(--navigation-button-fill);
+  border-color: transparent;
+}
+.account-menu-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--secondary);
+  flex-shrink: 0;
+}
+.account-menu-avatar svg {
+  width: 16px;
+  height: 16px;
+}
+.account-menu-identity {
+  min-width: 0;
+  flex: 1;
+}
+.account-menu-identity strong,
+.account-menu-identity small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.account-menu-identity strong {
+  font-size: 11px;
+  font-weight: 500;
+}
+.account-menu-identity small {
+  font-size: 10px;
+  color: var(--muted-foreground);
+  margin-top: 2px;
+}
+.account-menu-chevron {
+  width: 14px;
+  height: 14px;
+  color: var(--muted-foreground);
+  flex-shrink: 0;
+}
+.account-menu-popover {
+  width: 260px;
+  max-width: calc(100vw - 24px);
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--popover);
+  color: var(--foreground);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+}
+.account-menu-heading {
+  padding: 10px 9px 13px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 5px;
+}
+.account-menu-heading strong,
+.account-menu-heading small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.account-menu-heading strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.account-menu-heading small {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 3px;
+}
+.account-menu-popover nav {
+  display: grid;
+  gap: 2px;
+}
+.account-menu-popover nav a,
+.account-menu-popover nav button,
+.account-menu-signout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.account-menu-popover nav a:hover,
+.account-menu-popover nav button:hover,
+.account-menu-signout:hover {
+  background: var(--accent);
+  color: var(--foreground);
+}
+.account-menu-popover nav svg,
+.account-menu-signout svg {
+  width: 16px;
+  height: 16px;
+  color: var(--muted-foreground);
+}
+.account-menu-popover nav button {
+  text-align: left;
+}
+.account-help-topics {
+  display: grid;
+  gap: 10px;
+}
+.account-help-dialog [data-slot="dialog-description"] {
+  color: var(--muted-foreground);
+}
+.account-help-topics a {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--muted);
+  text-decoration: none;
+}
+.account-help-topics a:hover {
+  border-color: var(--border-strong);
+  background: var(--secondary);
+}
+.account-help-topics strong {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+.account-help-topics span {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+}
+.account-menu-signout {
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 6px 6px;
+  margin-top: 5px;
+}
+.account-menu-controls {
+  padding: 7px 9px 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 5px;
+}
+.account-menu-controls label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted-foreground);
+  font-size: 11px;
+}
+.account-menu-controls select {
+  width: 100%;
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--input);
+  border-radius: 6px;
+  color: var(--foreground);
+  padding: 8px;
+  font: inherit;
+}
+
+@media (min-width: 701px) {
+  .observation-shell .obs-sidebar {
+    width: 240px;
+    transform: none;
+  }
+  .observation-shell .obs-body {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+  }
+  .observation-shell .mobile-nav-button {
+    display: none;
+  }
+}
+@media (max-width: 1100px) {
+  .tool-workspace .ws-chart-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .observation-shell {
+    --panel-padding: 16px;
+  }
+  .tool-workspace .ws-metrics {
+    gap: 10px;
+  }
+  .account-menu-trigger {
+    min-height: 56px;
+  }
+  .mobile-sidebar-content .sidebar-bottom {
+    margin-top: auto;
+    padding-top: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="button"],
+  .account-menu-trigger {
+    transition: none;
+  }
+}

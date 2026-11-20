@@ -1,0 +1,35 @@
+.observation-shell[data-surface="user"] .obs-main {
+  max-width: none;
+  padding-top: 30px;
+}
+
+.observation-shell[data-surface="user"] .obs-topbar {
+  background: var(--background);
+  border-color: var(--border);
+}
+
+@media (max-width: 760px) {
+  .observation-shell[data-surface="user"] .obs-main {
+    padding-top: 22px;
+  }
+}
+
+@media (min-width: 701px) {
+  .observation-shell[data-surface="user"] .obs-topbar {
+    display: none;
+  }
+}
+
+.observation-shell[data-surface="user"] .obs-empty p {
+  color: var(--muted-foreground);
+}
+
+.observation-shell[data-surface="user"] .empty-symbol {
+  border-color: var(--border);
+  background: var(--muted);
+  box-shadow: none;
+}
+
+.observation-shell[data-surface="user"] .empty-symbol span {
+  background: var(--muted-foreground);
+}
