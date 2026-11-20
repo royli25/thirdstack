@@ -1,0 +1,83 @@
+.tool-settings-view {
+  display: grid;
+  gap: 24px;
+  max-width: 1440px;
+}
+.tool-settings-view form {
+  display: grid;
+  gap: 24px;
+}
+.platform-provider-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.platform-provider-grid fieldset {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.platform-provider-grid legend {
+  padding: 0 6px;
+}
+.platform-provider-grid label,
+.platform-fields label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+.platform-enabled {
+  display: flex !important;
+  align-items: center;
+}
+.platform-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.platform-fields select {
+  padding: 10px;
+  border: 1px solid var(--input);
+  background: var(--card);
+  border-radius: 6px;
+  min-height: 40px;
+}
+.platform-history details {
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+.platform-history summary {
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.platform-history pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .platform-provider-grid,
+  .platform-fields {
+    grid-template-columns: 1fr;
+  }
+  .tool-settings-view .page-heading {
+    align-items: flex-start;
+    gap: 16px;
+    flex-direction: column;
+  }
+}
+.platform-settings-controls {
+  display: grid;
+  gap: 24px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.platform-fields [data-slot="select-trigger"] {
+  margin-top: 8px;
+  width: 100%;
+}

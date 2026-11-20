@@ -1,0 +1,120 @@
+/* A shared settings layout for local connections and signed-in accounts. */
+.settings-page,
+.portal-settings .obs-main {
+  --settings-label-width: 210px;
+}
+.observation-shell .settings-section {
+  display: grid;
+  grid-template-columns: var(--settings-label-width) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  padding-block: 24px;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.settings-section > [data-slot="card-header"] {
+  padding: 4px 0;
+  border: 0;
+}
+.settings-section > [data-slot="card-content"] {
+  border: 1px solid var(--border);
+  border-radius: var(--surface-radius);
+  padding: var(--panel-padding);
+  background: var(--card);
+}
+.settings-section [data-slot="card-description"] {
+  margin-top: 8px;
+  line-height: 1.7;
+}
+.settings-section .settings-destination {
+  padding: 16px 4px;
+}
+.settings-section .settings-destination:first-child {
+  padding-top: 0;
+}
+.settings-section .settings-destination:last-child {
+  padding-bottom: 0;
+}
+.settings-connections > [data-slot="card-content"] {
+  padding: 0;
+}
+.settings-connections .settings-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+.settings-connections .product-panel {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.settings-connections .product-panel + .product-panel {
+  border-top: 1px solid var(--border);
+}
+.settings-connections .product-panel > [data-slot="card-header"] {
+  border: 0;
+  padding-bottom: 0;
+}
+.settings-section .data-control-row {
+  align-items: flex-start;
+  gap: 16px;
+}
+.settings-section .data-control-row > :is(button, [data-slot="badge"]) {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.settings-section .command-box {
+  margin-left: 0;
+}
+.settings-section .command-box code {
+  overflow-wrap: anywhere;
+}
+.settings-section .provider-connections {
+  margin-bottom: 16px;
+}
+.settings-section .provider-connections > div:first-child {
+  padding-top: 0;
+}
+.settings-section .provider-letter {
+  border: 1px solid var(--border);
+  background: var(--muted);
+}
+.settings-section .provider-letter img {
+  border-radius: 3px;
+}
+.settings-section .settings-account-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+@media (max-width: 1100px) {
+  .settings-page,
+  .portal-settings .obs-main {
+    --settings-label-width: 170px;
+  }
+  .observation-shell .settings-section {
+    gap: 20px;
+  }
+}
+@media (max-width: 900px) {
+  .observation-shell .settings-section {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .settings-section > [data-slot="card-header"] {
+    max-width: 480px;
+    padding: 0;
+  }
+}
+@media (max-width: 700px) {
+  .settings-section .data-control-row {
+    flex-wrap: wrap;
+  }
+  .settings-section .settings-identity > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+}

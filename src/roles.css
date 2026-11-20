@@ -1,0 +1,334 @@
+.portal-area {
+  padding: 0 16px 14px;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  font-weight: 500;
+}
+.portal-form {
+  display: grid;
+  gap: 20px;
+  max-width: 600px;
+}
+.portal-form label,
+.portal-company-select {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+.portal-form input,
+.portal-form textarea,
+.portal-form select,
+.portal-company-select select {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  border-radius: 7px;
+  padding: 10px 12px;
+  max-width: 100%;
+  font: inherit;
+  min-height: 40px;
+}
+.portal-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+.portal-form input:focus-visible,
+.portal-form select:focus-visible,
+.portal-company-select select:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.portal-form > button {
+  justify-self: start;
+}
+.portal-form .portal-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.6;
+}
+.portal-checkbox input {
+  min-height: 18px;
+  width: 18px;
+  flex-shrink: 0;
+  accent-color: var(--ring);
+}
+.portal-details {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.portal-details dt {
+  color: var(--muted-foreground);
+}
+.portal-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.portal-details a {
+  color: var(--foreground);
+  text-decoration: underline;
+}
+.portal-company-select {
+  max-width: 340px;
+  margin-bottom: 20px;
+}
+.portal-status {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-size: 12px;
+  color: var(--foreground);
+}
+.portal-steps {
+  padding-left: 22px;
+  display: grid;
+  gap: 22px;
+  max-width: 720px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.portal-steps li {
+  padding-left: 8px;
+}
+.portal-steps p {
+  margin: 6px 0 0;
+  color: var(--muted-foreground);
+  font-size: 13px;
+}
+.portal-review-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
+  gap: 24px;
+}
+.portal-company-list {
+  display: grid;
+  gap: 8px;
+}
+.portal-company-list button {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-align: left;
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--foreground);
+  cursor: pointer;
+}
+.portal-company-list button[aria-pressed="true"] {
+  border-color: var(--border-strong);
+  background: var(--muted);
+}
+.portal-company-list span {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.portal-audit {
+  margin-top: 28px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+.portal-audit summary {
+  cursor: pointer;
+  color: var(--foreground);
+}
+.portal-audit > div {
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.account-purpose {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin: 18px 0;
+}
+.account-purpose p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
+.account-purpose p:first-child {
+  margin-top: 0;
+  color: var(--foreground);
+}
+.account-purpose p:last-child {
+  margin-bottom: 0;
+}
+.portal-mobile-nav {
+  display: none;
+}
+.portal-navigation-close {
+  position: absolute;
+  top: 14px;
+  right: 8px;
+}
+.role-portal .obs-main > .panel {
+  margin-bottom: 24px;
+}
+@media (max-width: 900px) {
+  .portal-review-grid {
+    grid-template-columns: 1fr;
+  }
+  .portal-mobile-nav {
+    display: flex;
+    flex-direction: column;
+    background: var(--sidebar);
+    border-bottom: 1px solid var(--border);
+    padding: 18px;
+  }
+  .portal-mobile-nav nav {
+    display: grid;
+    gap: 6px;
+  }
+  .portal-mobile-nav nav a {
+    padding: 9px;
+    border-radius: 6px;
+    color: var(--muted-foreground);
+  }
+  .portal-mobile-nav nav a.selected {
+    background: var(--secondary);
+    color: var(--foreground);
+  }
+  .portal-mobile-nav .sidebar-bottom {
+    margin-top: 16px;
+  }
+  .portal-mobile-nav .obs-brand {
+    margin-bottom: 16px;
+  }
+  .portal-mobile-nav .portal-area {
+    padding-left: 0;
+  }
+  .portal-form input,
+  .portal-form textarea,
+  .portal-form select {
+    font-size: 16px;
+  }
+  .portal-details {
+    grid-template-columns: 80px minmax(0, 1fr);
+  }
+}
+
+.settings-preview-field {
+  display: grid;
+  gap: 8px;
+  max-width: 320px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+.settings-preview-field select {
+  min-height: 40px;
+  background-color: var(--card);
+  border: 1px solid var(--input);
+  border-radius: 7px;
+  padding: 8px 12px;
+  color: var(--foreground);
+  font: inherit;
+}
+.settings-account-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.settings-account-links a {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--foreground);
+  text-decoration: none;
+  padding-block: 8px;
+}
+.settings-identity {
+  margin: 0;
+  display: grid;
+}
+.settings-identity > div {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.6fr) minmax(0, 1fr);
+  gap: 16px;
+  padding-block: 14px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+.settings-identity > div:first-child {
+  padding-top: 0;
+}
+.settings-identity dt {
+  color: var(--muted-foreground);
+}
+.settings-identity dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.settings-identity + .settings-account-links {
+  padding-top: 12px;
+}
+.preview-notice {
+  position: fixed;
+  bottom: 16px;
+  right: 20px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: calc(100vw - 32px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--popover);
+  padding: 8px 10px 8px 14px;
+  color: var(--foreground);
+  font-size: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+.role-portal .obs-main .account-controls {
+  max-width: 320px;
+}
+.portal-team-member {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.portal-team-member p {
+  margin: 5px 0 0;
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+.portal-team-member strong {
+  overflow-wrap: anywhere;
+}
+.portal-team-member + form {
+  margin-top: 24px;
+}
+
+.settings-company-preview {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+  margin-top: 20px;
+}
+.preview-notice select {
+  appearance: none;
+  max-width: 210px;
+  min-width: 0;
+  border: 1px solid var(--input);
+  border-radius: 6px;
+  background: var(--card) url("/icons/chevron-down.svg?v=1") no-repeat right 8px
+    center / 14px 14px;
+  color: var(--foreground);
+  font: inherit;
+  padding: 6px 28px 6px 10px;
+  text-overflow: ellipsis;
+}

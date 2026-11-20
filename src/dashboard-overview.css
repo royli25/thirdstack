@@ -1,0 +1,344 @@
+.tool-workspace[data-dashboard-section="activity"] {
+  max-width: none;
+}
+
+.tool-workspace[data-dashboard-section="activity"] .ws-page-heading {
+  margin-bottom: 20px;
+}
+
+[data-dashboard-section="activity"] .ws-page-heading h1 {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 32.4px;
+}
+
+.ws-agent-marks {
+  display: flex;
+  flex: none;
+  padding-right: 2px;
+}
+
+.ws-agent-marks img {
+  width: 18px;
+  height: 18px;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--brand-accent);
+  object-fit: contain;
+}
+
+.ws-agent-marks img + img {
+  margin-left: -4px;
+}
+
+.tool-workspace[data-dashboard-section="activity"] .ws-metric {
+  min-height: 131px;
+  justify-content: space-between;
+  border-radius: 7px;
+  padding: 18px 21px 22px;
+}
+
+.tool-workspace[data-dashboard-section="activity"] .ws-metric strong {
+  margin: 0;
+  font-weight: 500;
+}
+
+.tool-workspace[data-dashboard-section="activity"] .ws-metric small {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.ws-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 739fr) minmax(0, 399fr);
+  gap: var(--grid-gap);
+  margin-bottom: var(--grid-gap);
+}
+
+.tool-workspace .ws-overview-grid .ws-panel {
+  margin: 0;
+  min-height: 377px;
+  border-radius: 7px;
+}
+
+.tool-workspace .ws-overview-grid .ws-panel > header,
+.tool-workspace .ws-overview-discover > header {
+  min-height: 51px;
+  padding: 11px 19px;
+}
+
+.ws-overview-grid .ws-panel h2,
+.ws-overview-discover h2 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tool-workspace .ws-overview-discover {
+  min-height: 145px;
+  border-radius: 7px;
+}
+
+.tool-workspace .ws-overview-discover > header {
+  border-bottom: 0;
+  padding: 25px;
+}
+
+.ws-overview-empty {
+  min-height: 324px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 32px 16px 16px;
+  text-align: center;
+}
+
+.ws-overview-empty-mark {
+  display: block;
+  flex: none;
+}
+
+.ws-overview-empty h3 {
+  margin: 0;
+  color: rgb(0 0 0 / 60%);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.ws-overview-requests {
+  width: calc(100% - 30px);
+  margin: 0 15px 10px;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  table-layout: fixed;
+  text-align: left;
+  font-size: 13px;
+}
+
+.ws-overview-requests :is(th, td) {
+  padding: 7px 10px;
+  overflow-wrap: anywhere;
+}
+
+.ws-overview-requests th {
+  font-weight: 400;
+}
+
+.ws-overview-requests thead {
+  color: var(--muted-foreground);
+}
+
+.ws-overview-requests th:first-child {
+  width: 38%;
+}
+
+.ws-overview-requests :is(th, td):nth-child(3) {
+  width: 84px;
+  text-align: right;
+}
+
+.ws-overview-requests :is(th, td):last-child {
+  width: 72px;
+  text-align: right;
+}
+
+.ws-overview-requests tbody :is(th, td) {
+  background: var(--background);
+  border-block: 1px solid var(--panel-line);
+}
+
+.ws-overview-requests tbody th {
+  border-left: 1px solid var(--panel-line);
+  border-radius: 7px 0 0 7px;
+}
+
+.ws-overview-requests tbody td:last-child {
+  border-right: 1px solid var(--panel-line);
+  border-radius: 0 7px 7px 0;
+}
+
+.ws-overview-requests th strong,
+.ws-overview-requests th small {
+  display: block;
+}
+
+.ws-overview-requests th strong {
+  font-weight: 500;
+}
+
+.ws-overview-requests th small {
+  color: var(--muted-foreground);
+}
+
+.ws-overview-requests .ws-overview-request-action[data-slot="button"] {
+  padding-inline: 6px;
+  border: 0;
+  background: var(--muted);
+  box-shadow: none;
+  font-size: 11px;
+}
+
+.ws-overview-providers {
+  display: grid;
+  gap: 10px;
+  padding: 16px 19px;
+}
+
+.ws-overview-provider-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 11px;
+  border: 1px solid var(--panel-line);
+  border-radius: 7px;
+  background: var(--background);
+  color: var(--muted-foreground);
+}
+
+.ws-overview-provider-search:focus-within {
+  outline: 2px solid var(--ring);
+}
+
+.ws-overview-provider-search svg {
+  flex-shrink: 0;
+}
+
+.ws-overview-provider-search [data-slot="input"] {
+  padding-left: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  font-size: 12px;
+}
+
+.ws-overview-provider {
+  min-height: 76px;
+  padding: 8px 11px 7px;
+  border: 1px solid var(--panel-line);
+  border-radius: 7px;
+  background: var(--background);
+}
+
+.ws-overview-provider h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ws-overview-provider .ws-provider-icon {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  background: transparent;
+}
+
+.ws-overview-provider img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.ws-overview-provider dl {
+  display: grid;
+  grid-template-columns: minmax(0, 119fr) minmax(0, 129fr) minmax(0, 87fr);
+  gap: 6px;
+  margin-top: 7px;
+  font-size: 12px;
+}
+
+.ws-overview-provider dt {
+  color: var(--muted-foreground);
+  font-size: 11px;
+  line-height: 12px;
+}
+
+.ws-overview-providers .ws-panel-note {
+  padding: 8px 0 0;
+  border: 0;
+}
+
+@media (max-width: 1040px) {
+  .ws-overview-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .tool-workspace[data-dashboard-section="activity"] .ws-metric {
+    min-height: 105px;
+    padding: 12px;
+  }
+
+  .ws-overview-requests :is(th, td) {
+    padding-inline: 5px;
+  }
+
+  .ws-overview-requests :is(th, td):nth-child(3) {
+    width: 61px;
+  }
+
+  .ws-overview-requests :is(th, td):last-child {
+    width: 58px;
+  }
+}
+
+.ws-overview-provider-list {
+  display: grid;
+  gap: 10px;
+  grid-auto-rows: max-content;
+  max-height: 254px;
+  margin: -3px;
+  padding: 3px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ws-overview-provider-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ws-overview-pin[data-slot="button"] {
+  color: var(--muted-foreground);
+}
+
+.ws-overview-pin[data-slot="button"] svg {
+  width: 16px;
+  height: 16px;
+  transform: rotate(40deg);
+}
+
+.ws-overview-pin[aria-pressed="true"] svg {
+  color: var(--foreground);
+  transform: rotate(0);
+}
+
+.ws-overview-provider dl > div {
+  display: grid;
+  align-content: start;
+}
+
+.ws-overview-provider dl dd {
+  grid-row: 1;
+  font-weight: 500;
+  line-height: 15px;
+}
+
+@media (min-width: 1041px) and (max-width: 1330px) {
+  .ws-overview-provider-list {
+    max-height: 290px;
+  }
+}
